@@ -68,7 +68,7 @@ dispersia <- function(fdens)
   tryCatch(retval <- integrate(subIntegrala, -Inf, Inf)$value,
            error= function(err)
            {
-             warning("Dispersia este divergenta")
+             stop("Dispersia este divergenta")
            })
 }
 
@@ -89,7 +89,7 @@ moment_centrat <- function(fdens, ordin)
   
   tryCatch(m <- media(fdens), warning=function(wr)
   {
-    stop("Calcularea momentului centrat de ordin " + ordin + " a esuat")
+    stop(paste("Calcularea momentului centrat de ordin ", ordin, " a esuat"))
   }) 
   
   xCoef <- function(x)
@@ -109,7 +109,7 @@ moment_centrat <- function(fdens, ordin)
   tryCatch(retval <- integrate(subIntegrala, -Inf, Inf)$value,
            error= function(err)
            {
-             warning("Momentul centrat de ordin " + ordin + " nu exista")
+             stop(paste("Momentul centrat de ordin ", ordin, " nu exista"))
            })
 }
 
@@ -123,7 +123,7 @@ moment_initial <- function(fdens, ordin)
   
   tryCatch(m <- media(fdens), warning=function(wr)
   {
-    stop("Calcularea momentului initial de ordin " + ordin + " a esuat")
+    stop(paste("Calcularea momentului initial de ordin ", ordin, " a esuat"))
   }) 
   
   xCoef <- function(x)
@@ -143,6 +143,6 @@ moment_initial <- function(fdens, ordin)
   tryCatch(retval <- integrate(subIntegrala, -Inf, Inf)$value,
            error= function(err)
            {
-             warning("Momentul initial de ordin " + ordin + " nu exista")
+             stop(paste("Momentul initial de ordin ", ordin, " nu exista"))
            })
 }

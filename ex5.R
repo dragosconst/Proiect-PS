@@ -32,10 +32,8 @@ media <- function(fdens)
   # more evil R magic
   subIntegrala <- Vectorize(subIntegrala)
   
-
-  retval <- 0  
   tryCatch(
-    retval <- integrate(subIntegrala, -Inf, Inf)$value,
+    integrate(subIntegrala, -Inf, Inf)$value,
     error=function(err){
       stop("Media este divergenta")
     }
@@ -48,14 +46,10 @@ dispersia <- function(fdens)
   # formula clasica cu integrala
   # -cand e gata clasa de variabile, putem incerca si formula aia mai rapida
   
-  m <- 0
   tryCatch(m <- media(fdens), warning=function(wr)
     {
       stop("Calcularea dispersiei a esuat")
-      m <<- -Inf # dublu << inseamna global scope pe m
     }) 
-  if(m == -Inf)
-    return(-1)
   
   xCoef <- function(x)
   {
@@ -93,14 +87,10 @@ moment_centrat <- function(fdens, ordin)
   else if(ordin == 2)
       return(dispersia(fdens))
   
-  m <- 0
   tryCatch(m <- media(fdens), warning=function(wr)
   {
     stop("Calcularea momentului centrat de ordin " + ordin + " a esuat")
-    m <<- -Inf # dublu << inseamna global scope pe m
   }) 
-  if(m == -Inf)
-    return(-1)
   
   xCoef <- function(x)
   {
@@ -131,14 +121,10 @@ moment_initial <- function(fdens, ordin)
   else if(ordin == 1)
     return(media(fdens))
   
-  m <- 0
   tryCatch(m <- media(fdens), warning=function(wr)
   {
     stop("Calcularea momentului initial de ordin " + ordin + " a esuat")
-    m <<- -Inf # dublu << inseamna global scope pe m
   }) 
-  if(m == -Inf)
-    return(-1)
   
   xCoef <- function(x)
   {

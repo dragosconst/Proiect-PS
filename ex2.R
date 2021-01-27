@@ -1,4 +1,4 @@
-# Funcția f este integrabilă pe [li, ls]; f este densitate de probabilitate
+# Funcția f este definită pe [li, ls]; f este densitate de probabilitate
 # - deci dp(f, li, ls) returnează TRUE - dacă:
 # (a) f(x) >= 0 pentru orice x din [li, ls],
 # (b) integrala de la li la ls din f(x), după x, este 1.
@@ -10,14 +10,20 @@
 
 dp <- function(f, li, ls) {
   
-  int <- integrate(Vectorize(f), li, ls, abs.tol = 0)$value == 1
+  tryCatch(
+    int <- integrate(Vectorize(f), li, ls, abs.tol = 0)$value == 1,
+    error = function(e) {
+      int <- FALSE
+      print("Integrala este divergentă.")
+    }
+  )
   
   if (li == -Inf)
     li <- -1000
   if (ls ==  Inf)
     ls <-  1000
   
-  all(sapply(seq(li, ls, length.out = 1000), f) >= 0) && int
+  int && all(sapply(seq(li, ls, length.out = 1000), f) >= 0)
 }
 
 # Teste: dp(function(x) 3*x^2, 0, 1) == TRUE

@@ -1,9 +1,16 @@
 Nor_constant <- function(Func) {
-  if(Func(5) < Func(4)){
-    print("Functie negativa")
+  if(all(sapply(seq(-100, 100, length.out = 1000), Func) < 0)){
+    stop("Functie negativa")
   }
   else {
-    const <- integrate(Func, lower = -Inf, upper = Inf)
+    tryCatch(const <- integrate(Vectorize(Func), lower = -Inf, upper = Inf)$value,
+             error= function(err)
+             {
+               stop("Integrala e divergenta")
+             })
+    if(const == 0)
+      stop("Nu exista constanta de normalizare pentru functia data")
+    const <- 1/const
     return(const)
   }
   

@@ -45,5 +45,6 @@ func <- function(x)
 # exemple
 X <- contRV(densitate = Vectorize(func), bidimen = FALSE)
 X
-integrate(Vectorize(func), -4, Inf, rel.tol = .Machine$double.eps^0.5)
+P(X, 5)
+#integrate(Vectorize(func), -4, Inf, rel.tol = .Machine$double.eps^0.5)
 

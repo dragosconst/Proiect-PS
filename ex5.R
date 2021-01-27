@@ -4,11 +4,11 @@
 # -f useful pt momente
 # O mica problema cu approach-ul asta e ca se pare ca R trimite ca argument
 # functiile ca referinte, nu cu shallow copy.
-# Implicatia e ca daca schimbi f in afara lui pow, o sa fie schimbat si cand e
-# aplicat de pow.
-# Daca faci ceva de genu myFunc <- pow(myFunc,2), obtii o recursie infinita.
-# Solutia este sa faci raisedFunc <- pow(myFunc, 2)
-pow <- function(f, y)
+# Implicatia e ca daca schimbi f in afara lui powF, o sa fie schimbat si cand e
+# aplicat de powF.
+# Daca faci ceva de genu myFunc <- powF(myFunc,2), obtii o recursie infinita.
+# Solutia este sa faci raisedFunc <- powF(myFunc, 2)
+powF <- function(f, y)
 {
   ret <- function(x)
   {
@@ -20,7 +20,7 @@ pow <- function(f, y)
 media <- function(fdens)
 {
   # evil R magic
-  fdens <- Vectorize(fdens)
+  fdens <- Vectorize(fdens) # needed ? putem presupune ca functiile trimise ca parametrii sunt deja vectorizate
   
   # -valoarea de sub integrala trebuie trimisa
   # ca o functie, cel mai lejer de scris e asa
@@ -56,7 +56,7 @@ dispersia <- function(fdens)
     x - m
   }
     
-  coefRaised <- pow(xCoef, 2)
+  coefRaised <- powF(xCoef, 2)
   coefRaised <- Vectorize(coefRaised)
   
   subIntegrala <- function(x)
@@ -83,9 +83,20 @@ moment_centrat <- function(fdens, ordin)
   if(ordin == 0)
       return(1)
   else if(ordin == 1)
-      return(0)
+      tryCatch({ # trebuie totusi verificat daca E(X) exista, ca altfel nu va da nici macar 0
+        media(fdens)
+        retval <- 0
+        }, error= function(err)
+          {
+          stop(paste("Calcularea momentului centrat de ordin ", ordin, " a esuat"))
+        })
   else if(ordin == 2)
-      return(dispersia(fdens))
+      tryCatch({  # daca dispersia nu exista, vrem un mesaj specific pt momente
+        dispersia(fdens)
+      }, error= function(err)
+        {
+        stop(paste("Calcularea momentului centrat de ordin ", ordin, " a esuat"))
+      })
   
   tryCatch(m <- media(fdens), warning=function(wr)
   {
@@ -97,7 +108,7 @@ moment_centrat <- function(fdens, ordin)
     x - m
   }
   
-  coefRaised <- pow(xCoef, ordin)
+  coefRaised <- powF(xCoef, ordin)
   coefRaised <- Vectorize(coefRaised)
   
   subIntegrala <- function(x)
@@ -119,7 +130,12 @@ moment_initial <- function(fdens, ordin)
   if(ordin == 0)
     return(1)
   else if(ordin == 1)
-    return(media(fdens))
+    tryCatch({ # trebuie totusi verificat daca E(X) exista, ca altfel nu va da nici macar 0
+      media(fdens)
+    }, error= function(err)
+    {
+      stop(paste("Calcularea momentului initial de ordin ", ordin, " a esuat"))
+    })
   
   tryCatch(m <- media(fdens), warning=function(wr)
   {
@@ -131,7 +147,7 @@ moment_initial <- function(fdens, ordin)
     x
   }
   
-  coefRaised <- pow(xCoef, ordin)
+  coefRaised <- powF(xCoef, ordin)
   coefRaised <- Vectorize(coefRaised)
   
   subIntegrala <- function(x)

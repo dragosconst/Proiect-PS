@@ -13,6 +13,7 @@ contRV <- function(densitate, bidimen, domeniu = c(-Inf, Inf))
 
 
 # asta e un inceput pentru ex. 7
+# ar trebui sa calculeze P(X <= x)
 if (!isGeneric("P"))
     setGeneric("P", function(object, x) standardGeneric("P"))
     

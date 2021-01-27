@@ -3,13 +3,18 @@
 # (a) f(x) >= 0 pentru orice x din [li, ls],
 # (b) integrala de la li la ls din f(x), după x, este 1.
 
+# Din documentația pentru integrate: „f must accept a vector of inputs and
+# produce a vector of function evaluations at those points”. Considerând că
+# utilizatorul introduce funcția dorită în regim scalar -> scalar, aplicând
+# Vectorize() se obține argumentul dorit pentru integrate.
+
 dp <- function(f, li, ls) {
   
   int <- integrate(Vectorize(f), li, ls, abs.tol = 0)$value == 1
   
   if (li == -Inf)
     li <- -1000
-  if (ls == Inf)
+  if (ls ==  Inf)
     ls <-  1000
   
   all(sapply(seq(li, ls, length.out = 1000), f) >= 0) && int
@@ -21,7 +26,3 @@ dp <- function(f, li, ls) {
 #                         if (x < 1)  1 - x else
 #                                     0
 #        dp(f, -Inf, Inf) == TRUE
-# Inspirație: math.stackexchange.com/questions/206050/
-#             how-do-i-tell-if-this-function-is-a-probability-density-function
-# Eroare la integrare: stackoverflow.com/questions/43818574/
-#      error-in-integrate-evaluation-of-function-gave-a-result-of-wrong-length

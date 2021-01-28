@@ -52,3 +52,30 @@ den.beta <- function(a, b) {
 # Teste: den.beta(0.5, 0.5)
 #        den.beta(2, 2)
 #        den.beta(2, 5)
+
+# la fel, dar animată; a fixat, 0 < b <= bmax
+den.beta_anim <- function(a = 2, bmax = 8) {
+  
+  par(bty = "o")
+  
+  for (b in seq(0.1, bmax, length.out = 150)) {
+    
+    d <- function(x) x^(a - 1) * (1 - x) ^ (b - 1) /
+                     integrate(function(u) u^(a - 1) * (1 - u)^(b - 1),
+                     0, 1, abs.tol = 0)$value
+    
+    x <- seq(0, 1, length.out = 1000)
+    plot(x,
+         d(x),
+         type = "l",
+         xlab = "x",
+         ylab = "densitate",
+         ylim = c(0, 5),
+         main = "Densitatea în repartiția beta")
+    
+    Sys.sleep(0.05)
+  }
+  
+}
+
+# Test: den.beta_anim()

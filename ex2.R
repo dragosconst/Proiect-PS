@@ -1,4 +1,4 @@
-# Funcția f este definită pe [li, ls]; f este densitate de probabilitate
+# Funcția f are suportul [li, ls]; f este densitate de probabilitate
 # - deci dp(f, li, ls) returnează TRUE - dacă:
 # (a) f(x) >= 0 pentru orice x din [li, ls],
 # (b) integrala de la li la ls din f(x), după x, este 1.

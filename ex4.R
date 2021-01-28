@@ -53,7 +53,7 @@ den.beta <- function(a, b) {
 #        den.beta(2, 2)
 #        den.beta(2, 5)
 
-# la fel, dar animată; a fixat, 0 < b <= bmax
+# la fel, dar animată; a - fixat, 0 < b <= bmax
 den.beta_anim <- function(a = 2, bmax = 8) {
   
   par(bty = "o")
@@ -79,3 +79,41 @@ den.beta_anim <- function(a = 2, bmax = 8) {
 }
 
 # Test: den.beta_anim()
+
+rep.beta <- function(a, b) {
+  curve(expr = pbeta(x, shape1 = a, shape2 = b),
+        from = 0,
+        to   = 1,
+        ylab = "probabilitate",
+        main = "Funcția repartiție beta")
+}
+
+# Teste: rep.beta(5, 1)
+#        rep.beta(2, 2)
+#        rep.beta(2, 5)
+
+
+# Repartiția gamma; k - „shape”, t - „scale”
+
+den.gamma <- function(k, t) {
+  curve(expr = dgamma(x, shape = k, scale = t),
+        from = 0,
+        to   = 20,
+        ylab = "densitate",
+        main = "Densitatea în repartiția gamma")
+}
+
+# Teste: den.gamma(1, 2)
+#        den.gamma(2, 2)
+#        den.gamma(7.5, 1)
+
+rep.gamma <- function(k, t) {
+  curve(expr = pgamma(x, shape = k, scale = t),
+        from = 0,
+        to   = 20,
+        ylab = "probabilitate",
+        main = "Funcția repartiție gamma")
+}
+
+# Teste: rep.gamma(0.5, 1)
+#        rep.gamma(7.5, 1)

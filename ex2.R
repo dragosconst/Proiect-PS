@@ -14,11 +14,6 @@ dp <- function(f, sup) {
   sum <- 0
   for (i in sup) {
     
-    if (any(sapply(seq(i[1], if (i[2] != Inf) i[2] else i[1] + 1000, length.out = 1000), f) < 0)) {
-      print(sprintf("Valoare negativă în intervalul [%.2f, %.2f]!", i[1], i[2]))
-      return(FALSE)
-    }
-    
     tryCatch(
       sum <- sum + integrate(Vectorize(f), i[1], i[2], abs.tol = 0)$value == 1,
       error = function(e) {
@@ -27,6 +22,19 @@ dp <- function(f, sup) {
       }
     )
     
+    if (i[1] == -Inf && i[2] == Inf) {
+      i[1] = -1000
+      i[2] =  1000
+    }
+    else if (i[1] == -Inf)
+      i[1] = i[2] - 1000
+    else if (i[2] ==  Inf)
+      i[2] = i[1] + 1000
+    
+    if (any(sapply(seq(i[1], i[2], length.out = 1000), f) < 0)) {
+      print(sprintf("Valoare negativă în intervalul [%.2f, %.2f]!", i[1], i[2]))
+      return(FALSE)
+    }
   }
   
   sum == 1

@@ -10,9 +10,9 @@
 # Solutia este sa faci raisedFunc <- powF(myFunc, 2)
 powF <- function(f, y)
 {
-  ret <- function(x)
+  ret <- function(...)
   {
-    f(x) ^ y
+    f(...) ^ y
   }
 }
 
@@ -22,9 +22,9 @@ media <- function(X)
   
   # -valoarea de sub integrala trebuie trimisa
   # ca o functie, cel mai lejer de scris e asa
-  subIntegrala <- function(x)
+  subIntegrala <- function(...)
   {
-    X@val(x) * X@densitate(x)
+    X@val(...) * X@densitate(...)
   }
   
   # more evil R magic
@@ -49,18 +49,18 @@ dispersia <- function(X)
       stop("Calcularea dispersiei a esuat, media nu exista")
     }) 
   
-  xCoef <- function(x)
+  xCoef <- function(...)
   {
     
-    X@val(x) - m
+    X@val(...) - m
   }
     
   coefRaised <- powF(xCoef, 2)
   coefRaised <- Vectorize(coefRaised)
   
-  subIntegrala <- function(x)
+  subIntegrala <- function(...)
   {
-    coefRaised(x) * X@densitate(x)
+    coefRaised(...) * X@densitate(...)
   }
   subIntegrala <- Vectorize(subIntegrala)
   
@@ -102,18 +102,18 @@ moment_centrat <- function(X, ordin)
     stop(paste("Calcularea momentului centrat de ordin ", ordin, " a esuat"))
   }) 
   
-  xCoef <- function(x)
+  xCoef <- function(...)
   {
     
-    X@val(x) - m
+    X@val(...) - m
   }
   
   coefRaised <- powF(xCoef, ordin)
   coefRaised <- Vectorize(coefRaised)
   
-  subIntegrala <- function(x)
+  subIntegrala <- function(...)
   {
-    coefRaised(x) * X@densitate(x)
+    coefRaised(...) * X@densitate(...)
   }
   subIntegrala <- Vectorize(subIntegrala)
   
@@ -138,18 +138,18 @@ moment_initial <- function(X, ordin)
     })
   
   
-  xCoef <- function(x)
+  xCoef <- function(...)
   {
     
-    X@val(x)
+    X@val(...)
   }
   
   coefRaised <- powF(xCoef, ordin)
   coefRaised <- Vectorize(coefRaised)
   
-  subIntegrala <- function(x)
+  subIntegrala <- function(...)
   {
-    coefRaised(x) * X@densitate(x)
+    coefRaised(...) * X@densitate(...)
   }
   subIntegrala <- Vectorize(subIntegrala)
   

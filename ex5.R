@@ -17,16 +17,14 @@ powF <- function(f, y)
 }
 
 # returneaza valoarea mediei sau o eroare
-media <- function(fdens)
+media <- function(X)
 {
-  # evil R magic
-  fdens <- Vectorize(fdens) # needed ? putem presupune ca functiile trimise ca parametrii sunt deja vectorizate
   
   # -valoarea de sub integrala trebuie trimisa
   # ca o functie, cel mai lejer de scris e asa
   subIntegrala <- function(x)
   {
-    x * fdens(x)
+    X@val(x) * X@densitate(x)
   }
   
   # more evil R magic
@@ -35,25 +33,26 @@ media <- function(fdens)
   tryCatch(
     integrate(subIntegrala, -Inf, Inf)$value,
     error=function(err){
-      stop("Media este divergenta")
+      stop("Media nu exista")
     }
   )
 }
 
-dispersia <- function(fdens)
+dispersia <- function(X)
 {
   # -deoarece momentan lucrez doar cu functii de densitate, voi folosi
   # formula clasica cu integrala
   # -cand e gata clasa de variabile, putem incerca si formula aia mai rapida
   
-  tryCatch(m <- media(fdens), warning=function(wr)
+  tryCatch(m <- media(X), warning=function(wr)
     {
-      stop("Calcularea dispersiei a esuat")
+      stop("Calcularea dispersiei a esuat, media nu exista")
     }) 
   
   xCoef <- function(x)
   {
-    x - m
+    
+    X@val(x) - m
   }
     
   coefRaised <- powF(xCoef, 2)
@@ -61,14 +60,14 @@ dispersia <- function(fdens)
   
   subIntegrala <- function(x)
   {
-    coefRaised(x) * fdens(x)
+    coefRaised(x) * X@densitate(x)
   }
   subIntegrala <- Vectorize(subIntegrala)
   
   tryCatch(retval <- integrate(subIntegrala, -Inf, Inf)$value,
            error= function(err)
            {
-             stop("Dispersia este divergenta")
+             stop("Dispersia nu exista.")
            })
 }
 
@@ -77,35 +76,36 @@ dispersia <- function(fdens)
 # ar fi sa scriem o singura functie moment, in care sa se indice cu un
 # parametru daca e centrat sau initial, ca sa mai economisim cod
 # -dezavantajul e evident ca functia generala de moment ar arata mai urat
-moment_centrat <- function(fdens, ordin)
+moment_centrat <- function(X, ordin)
 {
   # cazurile triviale
   if(ordin == 0)
       return(1)
   else if(ordin == 1)
       tryCatch({ # trebuie totusi verificat daca E(X) exista, ca altfel nu va da nici macar 0
-        media(fdens)
+        media(X)
         retval <- 0
         }, error= function(err)
           {
-          stop(paste("Calcularea momentului centrat de ordin ", ordin, " a esuat"))
+          stop(paste("Calcularea momentului centrat de ordin ", ordin, " a esuat, nu exista media."))
         })
   else if(ordin == 2)
-      tryCatch({  # daca dispersia nu exista, vrem un mesaj specific pt momente
-        dispersia(fdens)
+      tryCatch({  # X dispersia nu exista, vrem un mesaj specific pt momente
+        dispersia(X)
       }, error= function(err)
         {
-        stop(paste("Calcularea momentului centrat de ordin ", ordin, " a esuat"))
+        stop(paste("Calcularea momentului centrat de ordin ", ordin, " a esuat, nu exista dispersie."))
       })
   
-  tryCatch(m <- media(fdens), warning=function(wr)
+  tryCatch(m <- media(X), warning=function(wr)
   {
     stop(paste("Calcularea momentului centrat de ordin ", ordin, " a esuat"))
   }) 
   
   xCoef <- function(x)
   {
-    x - m
+    
+    X@val(x) - m
   }
   
   coefRaised <- powF(xCoef, ordin)
@@ -113,38 +113,35 @@ moment_centrat <- function(fdens, ordin)
   
   subIntegrala <- function(x)
   {
-    coefRaised(x) * fdens(x)
+    coefRaised(x) * X@densitate(x)
   }
   subIntegrala <- Vectorize(subIntegrala)
   
   tryCatch(retval <- integrate(subIntegrala, -Inf, Inf)$value,
            error= function(err)
            {
-             stop(paste("Momentul centrat de ordin ", ordin, " nu exista"))
+             stop(paste("Momentul centrat de ordin ", ordin, " nu exista."))
            })
 }
 
-moment_initial <- function(fdens, ordin)
+moment_initial <- function(X, ordin)
 {
   # cazurile triviale
   if(ordin == 0)
     return(1)
   else if(ordin == 1)
     tryCatch({ # trebuie totusi verificat daca E(X) exista, ca altfel nu va da nici macar 0
-      media(fdens)
+      media(X)
     }, error= function(err)
     {
-      stop(paste("Calcularea momentului initial de ordin ", ordin, " a esuat"))
+      stop(paste("Calcularea momentului initial de ordin ", ordin, " a esuat."))
     })
   
-  tryCatch(m <- media(fdens), warning=function(wr)
-  {
-    stop(paste("Calcularea momentului initial de ordin ", ordin, " a esuat"))
-  }) 
   
   xCoef <- function(x)
   {
-    x
+    
+    X@val(x)
   }
   
   coefRaised <- powF(xCoef, ordin)
@@ -152,13 +149,13 @@ moment_initial <- function(fdens, ordin)
   
   subIntegrala <- function(x)
   {
-    coefRaised(x) * fdens(x)
+    coefRaised(x) * X@densitate(x)
   }
   subIntegrala <- Vectorize(subIntegrala)
   
   tryCatch(retval <- integrate(subIntegrala, -Inf, Inf)$value,
            error= function(err)
            {
-             stop(paste("Momentul initial de ordin ", ordin, " nu exista"))
+             stop(paste("Momentul initial de ordin ", ordin, " nu exista."))
            })
 }

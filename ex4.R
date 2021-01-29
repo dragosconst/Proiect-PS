@@ -70,8 +70,10 @@ den.beta_anim <- function(a = 2, bmax = 8) {
          type = "l",
          xlab = "x",
          ylab = "densitate",
-         ylim = c(0, 5),
+         ylim = c(0, 7),
          main = "Densitatea în repartiția beta")
+    
+    legend(0.7, 6.5, legend = sprintf("b = %.2f", b), cex = 0.8)
     
     Sys.sleep(0.05)
   }

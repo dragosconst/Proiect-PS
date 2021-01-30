@@ -21,6 +21,10 @@ if (!isGeneric("Var"))
     setGeneric("Var", function(object) standardGeneric("Var"))
 if (!isGeneric("aplica"))
     setGeneric("aplica", function(object, f) standardGeneric("aplica"))
+if (!isGeneric("%AND%"))
+    setGeneric("%AND%", function(e1, e2) standardGeneric("%AND%"))
+if (!isGeneric("%OR%"))
+    setGeneric("%OR%", function(e1, e2) standardGeneric("%OR%"))
     
 
 # pentru calcularea probabilitatilor la ex.7
@@ -33,13 +37,20 @@ setMethod("<=", c("contRV", "numeric"), function (e1, e2) {
 setMethod(">", c("contRV", "numeric"), function (e1, e2) {
     comp(e1, e2, ">=") # P(X > x) = P(X >= x)
 })
-setMethod(">", c("contRV", "numeric"), function (e1, e2) {
+setMethod(">=", c("contRV", "numeric"), function (e1, e2) {
     comp(e1, e2, ">=")
+})
+setMethod("%AND%", c("contRV", "contRV"), function (e1, e2) {
+    op(e1, e2, "&")
+})
+setMethod("%OR%", c("contRV", "contRV"), function (e1, e2) {
+    op(e1, e2, "|")
 })
 setMethod("P", "contRV", 
           function (object) {
               prob(object)
           })
+
 
 
 setMethod("E", "contRV",

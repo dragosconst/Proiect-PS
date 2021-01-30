@@ -1,9 +1,9 @@
 # definire clasa 
 # -val: field care reprezinta ce pun sub integrala inainte de f(x)dx la medie
-setClass("contRV", slots=list(densitate="function", val="function", bidimen="logical", domeniu="numeric"))
+setClass("contRV", slots=list(densitate="function", val="function", bidimen="logical", domeniu="list"))
 
 # un fel de constructor
-contRV <- function(densitate, val = function(x) x, bidimen = FALSE, domeniu = c(-Inf, Inf))
+contRV <- function(densitate, val = function(x) x, bidimen = FALSE, domeniu = list(c(-Inf, Inf)))
 {
     
     # aici de verificat daca functia data este densitate de probabilitate
@@ -13,8 +13,6 @@ contRV <- function(densitate, val = function(x) x, bidimen = FALSE, domeniu = c(
 }
 
 
-# asta e un inceput pentru ex. 7
-# ar trebui sa calculeze P(X <= x)
 if (!isGeneric("P"))
     setGeneric("P", function(object, x) standardGeneric("P"))
 if (!isGeneric("E"))
@@ -24,10 +22,26 @@ if (!isGeneric("Var"))
 if (!isGeneric("aplica"))
     setGeneric("aplica", function(object, f) standardGeneric("aplica"))
     
+
+# pentru calcularea probabilitatilor la ex.7
+setMethod("<", c("contRV", "numeric"), function (e1, e2) {
+        comp(e1, e2, "<")
+})
+setMethod("<=", c("contRV", "numeric"), function (e1, e2) {
+    comp(e1, e2, "<=")
+})
+setMethod(">", c("contRV", "numeric"), function (e1, e2) {
+    comp(e1, e2, ">")
+})
+setMethod(">", c("contRV", "numeric"), function (e1, e2) {
+    comp(e1, e2, ">=")
+})
 setMethod("P", "contRV", 
-          function (object, x) {
-              integrate(f = object@densitate, lower = object@domeniu[1], upper = x)
+          function (object) {
+              prob(object)
           })
+
+
 setMethod("E", "contRV",
            function(object){
               media(object)
@@ -52,7 +66,15 @@ setMethod("show", "contRV",
           function (object) {
               cat("Densitatea de probabilitate: ")
               print(body(fun = object@densitate))
+              
               cat("Este v.a bidimensionala: ", object@bidimen, "\n")
+              
+              cat("Suportul densitatii: ")
+              for (i in object@domeniu) {
+                  cat("[", i[1], ",", i[2], "] ") # de afisat si un simbol de reuniune
+              }
+              cat("\n")
+              
               cat("Sub integrala o sa avem: ")
               print(body(fun = object@val))
           })
@@ -72,8 +94,6 @@ func <- function(x)
 
 
 # exemple
-X <- contRV(densitate = Vectorize(func), bidimen = FALSE)
-X
-P(X, 5)
-#integrate(Vectorize(func), -4, Inf, rel.tol = .Machine$double.eps^0.5)
+#X <- contRV(densitate = Vectorize(func), bidimen = FALSE, domeniu = list(c(-1, 1)))
+#X
 

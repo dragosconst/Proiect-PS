@@ -65,6 +65,35 @@ comp <- function(X, x, c)
 }
 
 
+prob <- function(X)
+{
+  #dp(f = X@densitate, sup = X@domeniu)
+  # integrare by Florin
+  sum <- 0
+  for (i in X@domeniu) {
+      sum <- sum + integrate(Vectorize(X@densitate), i[1], i[2], abs.tol = 0)$value
+  }
+  
+  return (sum)
+}
+
+
+# by Florin
+func <- function(x)
+{
+  if (x < -1)
+    0
+  else if (x < 0)
+    1 + x
+  else if (x < 1)
+    1 - x
+  else
+    0
+}
+
 # Teste
 # Y <- contRV(densitate = function(x) x, bidimen = FALSE, domeniu = list(c(0, 2), c(4, 7), c(9, 11)))
 # Y > 5
+
+# Z <- contRV(densitate = Vectorize(func), bidimen = FALSE, domeniu = list(c(-1, 1)))
+# P(Z <= 0) == 0.5

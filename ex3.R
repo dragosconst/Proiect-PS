@@ -14,7 +14,7 @@ contRV <- function(densitate, val = function(x) x, bidimen = FALSE, domeniu = li
 
 
 if (!isGeneric("P"))
-    setGeneric("P", function(object, x) standardGeneric("P"))
+    setGeneric("P", function(object) standardGeneric("P"))
 if (!isGeneric("E"))
     setGeneric("E", function(object) standardGeneric("E"))
 if (!isGeneric("Var"))

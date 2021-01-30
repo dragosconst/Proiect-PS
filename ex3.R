@@ -25,13 +25,13 @@ if (!isGeneric("aplica"))
 
 # pentru calcularea probabilitatilor la ex.7
 setMethod("<", c("contRV", "numeric"), function (e1, e2) {
-        comp(e1, e2, "<")
+    comp(e1, e2, "<=") # P(X < x) = P(X <= x)
 })
 setMethod("<=", c("contRV", "numeric"), function (e1, e2) {
     comp(e1, e2, "<=")
 })
 setMethod(">", c("contRV", "numeric"), function (e1, e2) {
-    comp(e1, e2, ">")
+    comp(e1, e2, ">=") # P(X > x) = P(X >= x)
 })
 setMethod(">", c("contRV", "numeric"), function (e1, e2) {
     comp(e1, e2, ">=")

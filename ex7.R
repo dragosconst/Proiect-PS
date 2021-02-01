@@ -67,8 +67,6 @@ comp <- function(X, x, c)
 
 prob <- function(X)
 {
-  #dp(f = X@densitate, sup = X@suport)
-  # integrare by Florin
   return(integrala(X))
 }
 
@@ -225,7 +223,14 @@ op <- function(X, Y, o)
   return (contRV(densitate = X@densitate, val = X@val, bidimen = X@bidimen, suport = suportNou))
 }
 
-# TODO: probabilitati conditionate
+
+# Calculeaza probabilitatea conditionata
+# X si Y pot fi expresii de tipul Z <= x, Z %AND% W etc.
+cond <- function (X, Y)
+{
+  return (integrala(X %AND% Y) / integrala(Y)) # P(X ∩ Y) / P(Y)
+}
+
 
 # Teste
 # Y nu este o v.a, se foloseste pt a testa operatiile de tip intersectie si reuniune de intervale
@@ -239,3 +244,4 @@ op <- function(X, Y, o)
 # P(Z <= 0) == 0.5
 # P((Z <= 0.5) %AND% (Z >= -0.7)) == 0.83
 # P((Z <= 0.5) %OR% (Z >= -0.7)) == 1
+# P(Z >= 0.1 | Z <= 0.8) == 0.3928572

@@ -1,3 +1,6 @@
+# Daca apare vreo problema la compilare, stergeti workspace-ul!
+
+
 # definire clasa 
 # -val: field care reprezinta ce pun sub integrala inainte de f(x)dx la medie
 setClass("contRV", slots=list(densitate="function", val="function", bidimen="logical", suport="list"))
@@ -46,9 +49,17 @@ setMethod("%AND%", c("contRV", "contRV"), function (e1, e2) {
 setMethod("%OR%", c("contRV", "contRV"), function (e1, e2) {
     op(e1, e2, "|")
 })
+setMethod("|", c("contRV", "contRV"), function (e1, e2) {
+    cond(e1, e2)
+})
 setMethod("P", "contRV", 
           function (object) {
-              prob(object)
+              return (prob(object))
+          })
+# functie wrapper pentru rezultatul probabilitatii conditionate
+setMethod("P", "numeric", 
+          function (object) {
+              return (object)
           })
 
 

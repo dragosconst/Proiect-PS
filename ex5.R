@@ -1,5 +1,6 @@
 
-
+# Un mic hack cu functia asta e ca daca vreti sa calculati integrala unei functii care nu e explicit densitate,
+# puteti face un obiect contRv cu densitatea functia pe care vreti sa o integrati si val = f(...) = 1 (functia care duce tot in 1).
 integrala <- function(X)
 {
   if(X@bidimen)
@@ -11,7 +12,7 @@ integrala <- function(X)
   {
     sum <- 0
     for (i in X@suport) {
-      tryCatch(sum <- sum + integrate(Vectorize(X@densitate), i[1], i[2], abs.tol = 0)$value,
+      tryCatch(sum <- sum + integrate(Vectorize(X@densitate), i[1], i[2], abs.tol = 1.0e-13)$value,
                error= function(err)
                {
                  stop("Integrala a esuat.")  
@@ -52,9 +53,9 @@ media <- function(X)
   
   # more evil R magic
   subIntegrala <- Vectorize(subIntegrala)
-  
-  tryCatch(
-    integrate(subIntegrala, -Inf, Inf)$value,
+  tmp <- contRV(densitate = subIntegrala, val = Vectorize(function(...) {retval <- 1}), bidimen = X@bidimen, suport = X@suport)
+
+  tryCatch(retval <- integrala(tmp),
     error=function(err){
       stop("Media nu exista")
     }
@@ -86,8 +87,9 @@ dispersia <- function(X)
     coefRaised(...) * X@densitate(...)
   }
   subIntegrala <- Vectorize(subIntegrala)
+  tmp <- contRV(densitate = subIntegrala, val = function(...) 1, bidimen = X@bidimen, suport = X@suport)
   
-  tryCatch(retval <- integrala(X),
+  tryCatch(retval <- integrala(tmp),
            error= function(err)
            {
              stop("Dispersia nu exista.")
@@ -139,8 +141,9 @@ moment_centrat <- function(X, ordin)
     coefRaised(...) * X@densitate(...)
   }
   subIntegrala <- Vectorize(subIntegrala)
+  tmp <- contRV(densitate = subIntegrala, val = function(...) 1, bidimen = X@bidimen, suport = X@suport)
   
-  tryCatch(retval <- integrate(subIntegrala, -Inf, Inf)$value,
+  tryCatch(retval <- integrala(tmp),
            error= function(err)
            {
              stop(paste("Momentul centrat de ordin ", ordin, " nu exista."))
@@ -175,8 +178,9 @@ moment_initial <- function(X, ordin)
     coefRaised(...) * X@densitate(...)
   }
   subIntegrala <- Vectorize(subIntegrala)
+  tmp <- contRV(densitate = subIntegrala, val = function(...) 1, bidimen = X@bidimen, suport = X@suport)
   
-  tryCatch(retval <- integrate(subIntegrala, -Inf, Inf)$value,
+  tryCatch(retval <- integrala(tmp),
            error= function(err)
            {
              stop(paste("Momentul initial de ordin ", ordin, " nu exista."))

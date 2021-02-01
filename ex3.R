@@ -90,28 +90,6 @@ setMethod("show", "contRV",
               print(body(fun = object@val))
           })
 
-integrala <- function(X)
-{
-    if(X@bidimen)
-    {
-        retval <- 0
-        #...
-    }
-    else
-    {
-        sum <- 0
-        for (i in X@suport) {
-            tryCatch(sum <- sum + integrate(Vectorize(X@densitate), i[1], i[2], abs.tol = 0)$value,
-                     error= function(err)
-                     {
-                       stop("Integrala a esuat.")  
-                     })
-        }
-        retval <- sum # return
-    }
-}
-
-
 # by Florin
 func <- function(x)
 {

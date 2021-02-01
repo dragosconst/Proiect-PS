@@ -1,3 +1,26 @@
+
+
+integrala <- function(X)
+{
+  if(X@bidimen)
+  {
+    retval <- 0
+    #...
+  }
+  else
+  {
+    sum <- 0
+    for (i in X@suport) {
+      tryCatch(sum <- sum + integrate(Vectorize(X@densitate), i[1], i[2], abs.tol = 0)$value,
+               error= function(err)
+               {
+                 stop("Integrala a esuat.")  
+               })
+    }
+    retval <- sum # return
+  }
+}
+
  
 # -hackish function
 # -asa pot ridica o functie la puterea y si ca retval sa am tot o functie
@@ -64,7 +87,7 @@ dispersia <- function(X)
   }
   subIntegrala <- Vectorize(subIntegrala)
   
-  tryCatch(retval <- integrate(subIntegrala, -Inf, Inf)$value,
+  tryCatch(retval <- integrala(X),
            error= function(err)
            {
              stop("Dispersia nu exista.")

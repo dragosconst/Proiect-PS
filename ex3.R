@@ -21,8 +21,12 @@ contRV <- function(densitate, val = function(x) x, bidimen = FALSE, suport = lis
     
     # aici de verificat daca functia data este densitate de probabilitate
     
-    if (!bidimen) # daca v.a nu este bidimensionala, atunci suportul nu a fost furnizat ca o lista de liste
-        suport <- list(suport) # fa-l lista de liste
+    # Metoda precedenta era foarte buna, singura problema e ca daca faceam artificii de cod, de ex facem
+    # o v.a.c. ca sa calculam o integrala, daca nu era bidimensionala, ii tot imbrica lista de suport si in final dadea eroare la integrala. 
+    if(length(suport) < 2)
+        suport <- list(suport, list())
+    if (bidimen && missing(val))
+        val = function(x, y) x * y
     
     obj <- new("contRV", densitate = densitate, val = val, bidimen = bidimen,
                suport = suport, densitateX = densitateX, densitateY = densitateY)
@@ -81,10 +85,10 @@ setMethod("P", "numeric",
 
 setMethod("E", "contRV",
            function(object){
-              media(object)
+              return(media(object))
            })
 setMethod("Var", "contRV",
-          function(object) dispersia(object))
+          function(object) return(dispersia(object)))
 
 compunere <- function(f, g)
 {

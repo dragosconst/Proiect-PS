@@ -12,7 +12,7 @@ comp <- function(X, x, c)
       # Exemplu: Daca suportul densitatii este format din [0, 2] U [4, 7] U [9, 11]
       # Noul suport pentru X <= 5 va fi [0, 2] U [4, 5]
      
-      for (i in X@suport)
+      for (i in X@suport[[1]])
       {
           a <- i[1]
           b <- i[2]
@@ -37,7 +37,7 @@ comp <- function(X, x, c)
      # Noul suport pentru X >= 5 va fi [5, 7] U [9, 11]
       
       # parcurgem intervalele in ordine descrescatoare dupa capatul inferior
-      for (i in rev(X@suport))
+      for (i in rev(X@suport[[1]]))
       {
         a <- i[1]
         b <- i[2]
@@ -61,7 +61,8 @@ comp <- function(X, x, c)
    }
   
    # atentie! rezultatul obtinut nu mai este o v.a! se foloseste doar pt a calcula probabilitati!
-   return (contRV(densitate = X@densitate, val = X@val, bidimen = X@bidimen, suport = suportNou))
+   return (contRV(densitate = X@densitate, val = X@val, bidimen = X@bidimen, suport = suportNou,
+                  densitateX = X@densitateX, densitateY = X@densitateY))
 }
 
 
@@ -121,9 +122,9 @@ op <- function(X, Y, o)
   if (o == "&") # intersectie
   {
     
-    for (i in X@suport)
+    for (i in X@suport[[1]])
     {
-      for (j in Y@suport)
+      for (j in Y@suport[[1]])
       {
          # reuniuni de intersectii ale intervalelor din suport
          
@@ -140,14 +141,14 @@ op <- function(X, Y, o)
   {
     i <- 1
     j <- 1
-    while (i <= length(X@suport) && j <= length(Y@suport))
+    while (i <= length(X@suport[[1]]) && j <= length(Y@suport[[1]]))
     {
        # Formeaza intervale disjuncte in urma reuniunii (se vor intersecta totusi cate doua 
        # in cel mult un punct, dar acest lucru se neglijeaza la calculul integralei).
        # Exemplu: [1, 5] U [3, 9] = [1, 3] U [3, 5] U [5, 9]
       
-       A <- X@suport[[i]]
-       B <- Y@suport[[j]]
+       A <- X@suport[[1]][[i]]
+       B <- Y@suport[[1]][[j]]
        C <- interval_intersect(A, B)
        
        if (is.null(C)) # daca sunt disjuncte
@@ -205,22 +206,23 @@ op <- function(X, Y, o)
        j <- j + 1
     }
     
-    while (i <= length(X@suport))
+    while (i <= length(X@suport[[1]]))
     {
-       suportNou[[nr]] <- X@suport[[i]]
+       suportNou[[nr]] <- X@suport[[1]][[i]]
        nr <- nr + 1
        i <- i + 1
     }
     
-    while (j <= length(Y@suport))
+    while (j <= length(Y@suport[[1]]))
     {
-      suportNou[[nr]] <- Y@suport[[j]]
+      suportNou[[nr]] <- Y@suport[[1]][[j]]
       nr <- nr + 1
       j <- j + 1
     }
   }
   
-  return (contRV(densitate = X@densitate, val = X@val, bidimen = X@bidimen, suport = suportNou))
+  return (contRV(densitate = X@densitate, val = X@val, bidimen = X@bidimen, suport = suportNou,
+                 densitateX = X@densitateX, densitateY = X@densitateY))
 }
 
 

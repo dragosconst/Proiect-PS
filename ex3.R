@@ -3,14 +3,29 @@
 
 # definire clasa 
 # -val: field care reprezinta ce pun sub integrala inainte de f(x)dx la medie
-setClass("contRV", slots=list(densitate="function", val="function", bidimen="logical", suport="list"))
+
+# pt v.a bidimensionala (X, Y) slotul densitate retine densitatea comuna a lui X si Y
+# densitateX: densitatea (marginala) a v.a X in cadrul v.a bidimensionale (X, Y)
+# suport[[1]] este suportul densitatii lui X(sau suportul densitatii in cazul v.a unidimensionale)
+# suport[[2]] este suportul lui Y
+setClass("contRV", slots=list(densitate="function", val="function", bidimen="logical", suport="list",
+                              densitateX = "function", densitateY = "function"))
 
 # un fel de constructor
-contRV <- function(densitate, val = function(x) x, bidimen = FALSE, suport = list(c(-Inf, Inf)))
+# Pentru v.a unidimensionala parametrul suport va fi lista intervalelor(nu lista de liste, ca mai jos!)
+# Pentru v.a bidimensionala (X, Y) parametrul suport va fi o lista ce contine 
+    # 2 liste corespunzatoare suportului densitatii lui X, respectiv Y
+contRV <- function(densitate, val = function(x) x, bidimen = FALSE, suport = list(c(-Inf, Inf)),
+                   densitateX = function(x) NULL, densitateY = function(x) NULL)
 {
     
     # aici de verificat daca functia data este densitate de probabilitate
-    obj <- new("contRV", densitate = densitate, val = val, bidimen = bidimen, suport = suport)
+    
+    if (!bidimen) # daca v.a nu este bidimensionala, atunci suportul nu a fost furnizat ca o lista de liste
+        suport <- list(suport) # fa-l lista de liste
+    
+    obj <- new("contRV", densitate = densitate, val = val, bidimen = bidimen,
+               suport = suport, densitateX = densitateX, densitateY = densitateY)
     
     return (obj)
 }
@@ -80,7 +95,7 @@ compunere <- function(f, g)
 # aici nu sunt 100% sigur daca f trebuie vectorizata dinainte
 setMethod("aplica", "contRV",
           function(object, f){
-              retval <- contRV(object@densitate, Vectorize(compunere(f, object@val)), object@bidimen, object@suport)
+              retval <- contRV(object@densitate, Vectorize(compunere(f, object@val)), object@bidimen, object@suport[[1]])
           })
 
 # supraincarcare functie de afisare
@@ -92,7 +107,7 @@ setMethod("show", "contRV",
               cat("Este v.a bidimensionala: ", object@bidimen, "\n")
               
               cat("Suportul densitatii: ")
-              for (i in object@suport) {
+              for (i in object@suport[[1]]) {
                   cat("[", i[1], ",", i[2], "] ") # de afisat si un simbol de reuniune
               }
               cat("\n")

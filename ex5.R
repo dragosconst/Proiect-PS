@@ -17,7 +17,7 @@ integrala <- function(X)
                  stop("Integrala a esuat.")  
                })
     }
-    return (sum)
+    retval <- sum # return
   }
 }
 

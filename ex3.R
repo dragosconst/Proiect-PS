@@ -1,13 +1,13 @@
 # definire clasa 
 # -val: field care reprezinta ce pun sub integrala inainte de f(x)dx la medie
-setClass("contRV", slots=list(densitate="function", val="function", bidimen="logical", domeniu="list"))
+setClass("contRV", slots=list(densitate="function", val="function", bidimen="logical", suport="list"))
 
 # un fel de constructor
-contRV <- function(densitate, val = function(x) x, bidimen = FALSE, domeniu = list(c(-Inf, Inf)))
+contRV <- function(densitate, val = function(x) x, bidimen = FALSE, suport = list(c(-Inf, Inf)))
 {
     
     # aici de verificat daca functia data este densitate de probabilitate
-    obj <- new("contRV", densitate = densitate, val = val, bidimen = bidimen, domeniu = domeniu)
+    obj <- new("contRV", densitate = densitate, val = val, bidimen = bidimen, suport = suport)
     
     return (obj)
 }
@@ -69,7 +69,7 @@ compunere <- function(f, g)
 # aici nu sunt 100% sigur daca f trebuie vectorizata dinainte
 setMethod("aplica", "contRV",
           function(object, f){
-              retval <- contRV(object@densitate, Vectorize(compunere(f, object@val)), object@bidimen, object@domeniu)
+              retval <- contRV(object@densitate, Vectorize(compunere(f, object@val)), object@bidimen, object@suport)
           })
 
 # supraincarcare functie de afisare
@@ -81,7 +81,7 @@ setMethod("show", "contRV",
               cat("Este v.a bidimensionala: ", object@bidimen, "\n")
               
               cat("Suportul densitatii: ")
-              for (i in object@domeniu) {
+              for (i in object@suport) {
                   cat("[", i[1], ",", i[2], "] ") # de afisat si un simbol de reuniune
               }
               cat("\n")
@@ -89,6 +89,28 @@ setMethod("show", "contRV",
               cat("Sub integrala o sa avem: ")
               print(body(fun = object@val))
           })
+
+integrala <- function(X)
+{
+    if(X@bidimen)
+    {
+        retval <- 0
+        #...
+    }
+    else
+    {
+        sum <- 0
+        for (i in X@suport) {
+            tryCatch(sum <- sum + integrate(Vectorize(X@densitate), i[1], i[2], abs.tol = 0)$value,
+                     error= function(err)
+                     {
+                       stop("Integrala a esuat.")  
+                     })
+        }
+        retval <- sum # return
+    }
+}
+
 
 # by Florin
 func <- function(x)
@@ -105,6 +127,6 @@ func <- function(x)
 
 
 # exemple
-#X <- contRV(densitate = Vectorize(func), bidimen = FALSE, domeniu = list(c(-1, 1)))
+#X <- contRV(densitate = Vectorize(func), bidimen = FALSE, suport = list(c(-1, 1)))
 #X
 

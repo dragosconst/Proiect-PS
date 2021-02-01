@@ -12,7 +12,7 @@ comp <- function(X, x, c)
       # Exemplu: Daca suportul densitatii este format din [0, 2] U [4, 7] U [9, 11]
       # Noul suport pentru X <= 5 va fi [0, 2] U [4, 5]
      
-      for (i in X@domeniu)
+      for (i in X@suport)
       {
           a <- i[1]
           b <- i[2]
@@ -37,7 +37,7 @@ comp <- function(X, x, c)
      # Noul suport pentru X >= 5 va fi [5, 7] U [9, 11]
       
       # parcurgem intervalele in ordine descrescatoare dupa capatul inferior
-      for (i in rev(X@domeniu))
+      for (i in rev(X@suport))
       {
         a <- i[1]
         b <- i[2]
@@ -61,20 +61,15 @@ comp <- function(X, x, c)
    }
   
    # atentie! rezultatul obtinut nu mai este o v.a! se foloseste doar pt a calcula probabilitati!
-   return (contRV(densitate = X@densitate, val = X@val, bidimen = X@bidimen, domeniu = suportNou))
+   return (contRV(densitate = X@densitate, val = X@val, bidimen = X@bidimen, suport = suportNou))
 }
 
 
 prob <- function(X)
 {
-  #dp(f = X@densitate, sup = X@domeniu)
+  #dp(f = X@densitate, sup = X@suport)
   # integrare by Florin
-  sum <- 0
-  for (i in X@domeniu) {
-      sum <- sum + integrate(Vectorize(X@densitate), i[1], i[2], abs.tol = 0)$value
-  }
-  
-  return (sum)
+  return(integrala(X))
 }
 
 interval_intersect <- function (A, B)
@@ -128,9 +123,9 @@ op <- function(X, Y, o)
   if (o == "&") # intersectie
   {
     
-    for (i in X@domeniu)
+    for (i in X@suport)
     {
-      for (j in Y@domeniu)
+      for (j in Y@suport)
       {
          # reuniuni de intersectii ale intervalelor din suport
          
@@ -147,14 +142,14 @@ op <- function(X, Y, o)
   {
     i <- 1
     j <- 1
-    while (i <= length(X@domeniu) && j <= length(Y@domeniu))
+    while (i <= length(X@suport) && j <= length(Y@suport))
     {
        # Formeaza intervale disjuncte in urma reuniunii (se vor intersecta totusi cate doua 
        # in cel mult un punct, dar acest lucru se neglijeaza la calculul integralei).
        # Exemplu: [1, 5] U [3, 9] = [1, 3] U [3, 5] U [5, 9]
       
-       A <- X@domeniu[[i]]
-       B <- Y@domeniu[[j]]
+       A <- X@suport[[i]]
+       B <- Y@suport[[j]]
        C <- interval_intersect(A, B)
        
        if (is.null(C)) # daca sunt disjuncte
@@ -212,35 +207,35 @@ op <- function(X, Y, o)
        j <- j + 1
     }
     
-    while (i <= length(X@domeniu))
+    while (i <= length(X@suport))
     {
-       suportNou[[nr]] <- X@domeniu[[i]]
+       suportNou[[nr]] <- X@suport[[i]]
        nr <- nr + 1
        i <- i + 1
     }
     
-    while (j <= length(Y@domeniu))
+    while (j <= length(Y@suport))
     {
-      suportNou[[nr]] <- Y@domeniu[[j]]
+      suportNou[[nr]] <- Y@suport[[j]]
       nr <- nr + 1
       j <- j + 1
     }
   }
   
-  return (contRV(densitate = X@densitate, val = X@val, bidimen = X@bidimen, domeniu = suportNou))
+  return (contRV(densitate = X@densitate, val = X@val, bidimen = X@bidimen, suport = suportNou))
 }
 
 # TODO: probabilitati conditionate
 
 # Teste
 # Y nu este o v.a, se foloseste pt a testa operatiile de tip intersectie si reuniune de intervale
-# Y <- contRV(densitate = function(x) x, bidimen = FALSE, domeniu = list(c(0, 2), c(4, 7), c(9, 11)))
+# Y <- contRV(densitate = function(x) x, bidimen = FALSE, suport = list(c(0, 2), c(4, 7), c(9, 11)))
 # Y > 5  -- suportul va fi [5, 7] U [9, 11]
 # ((Y <= 1) %OR% (Y >= 5)) -- suportul va fi [0, 1] U [5, 7] U [9, 11]
 # ((Y <= 5) %AND% (Y >= 1.5)) -- suportul va fi [1.5, 2] U [4, 5]
 
 
-# Z <- contRV(densitate = Vectorize(func), bidimen = FALSE, domeniu = list(c(-1, 1)))
+# Z <- contRV(densitate = Vectorize(func), bidimen = FALSE, suport = list(c(-1, 1)))
 # P(Z <= 0) == 0.5
 # P((Z <= 0.5) %AND% (Z >= -0.7)) == 0.83
 # P((Z <= 0.5) %OR% (Z >= -0.7)) == 1

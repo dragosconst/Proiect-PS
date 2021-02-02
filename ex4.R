@@ -81,6 +81,7 @@ den.beta_anim <- function(a = 2, bmax = 8) {
 }
 
 # Test: den.beta_anim()
+#       den.beta_anim(0.8, 15)
 
 rep.beta <- function(a, b) {
   curve(expr = pbeta(x, shape1 = a, shape2 = b),

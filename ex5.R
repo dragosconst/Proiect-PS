@@ -36,7 +36,7 @@ integrala <- function(X, dt = 0)
       
       return(sum)
     }
-    else if(dt == dx) # derivare doar pe x
+    else if(dt == dx) # integrare doar pe x
     {
     #   Ok, deci ideea care mi a venit aici este sa construiesc un vector de functii asa:
     #   f_i+1 (y) = (integrala pe [a_i+1,b_i+1]dx) + f_i(y)
@@ -82,7 +82,7 @@ integrala <- function(X, dt = 0)
       
       return(funcs[[length(funcs)]])
     }
-    else if(dt == dy) # derivare doar pe y
+    else if(dt == dy) # integrare doar pe y
     {
       funcs <- vector()
       factory <- function(i1, i2, pas)

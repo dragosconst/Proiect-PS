@@ -110,7 +110,7 @@ setMethod("show", "contRV",
               
               cat("Este v.a bidimensionala: ", object@bidimen, "\n")
               
-              cat("Suportul densitatii: ")
+              cat("Suportul densitatii: ") # de fisat si pt v.a bidimensionale
               for (i in object@suport[[1]]) {
                   cat("[", i[1], ",", i[2], "] ") # de afisat si un simbol de reuniune
               }
@@ -138,3 +138,8 @@ func <- function(x)
 #X <- contRV(densitate = Vectorize(func), bidimen = FALSE, suport = list(c(-1, 1)))
 #X
 
+#test
+A <- contRV(densitate = function (x, y) 6/7(x+y)^2,
+            bidimen = TRUE, suport = list(list(c(0, 1)), list(c(0, 1))))
+
+integrala(A, dt = 1)

@@ -7,7 +7,24 @@ comp <- function(X, x, c)
    # Presupunem ca intervalele sunt in ordine crescatoare dupa capatul inferior
    # si nu se intersecteaza!
    
-   if (c == "<=")
+   if (c == "==")
+   {
+      for (i in X@suport[[1]])
+      {
+        a <- i[1]
+        b <- i[2]
+        
+        if (x < a)
+          break # nu mai are rost sa cautam
+        
+        if (a <= x & b >= x) # daca x se afla in intervalul [a, b]
+        {
+          suportNou[[nr]] <- c(x, x) # suportul va fi intervalul [x, x]
+          break
+        }
+      }
+   }
+   else if (c == "<=")
    {
       # Exemplu: Daca suportul densitatii este format din [0, 2] U [4, 7] U [9, 11]
       # Noul suport pentru X <= 5 va fi [0, 2] U [4, 5]
@@ -61,14 +78,14 @@ comp <- function(X, x, c)
    }
   
    # atentie! rezultatul obtinut nu mai este o v.a! se foloseste doar pt a calcula probabilitati!
-   return (contRV(densitate = X@densitate, val = X@val, bidimen = X@bidimen, suport = suportNou,
-                  densitateX = X@densitateX, densitateY = X@densitateY))
+   return (contRV(densitate = X@densitate, val = X@val, bidimen = X@bidimen, suport = suportNou, 
+                  ref_va_bidimen = X@ref_va_bidimen))
 }
 
 
 prob <- function(X)
 {
-  return(integrala(X))
+    return(integrala(X))
 }
 
 interval_intersect <- function (A, B)
@@ -117,10 +134,25 @@ func <- function(x)
 op <- function(X, Y, o)
 {
   
+  
+  
   suportNou <- list()
   nr <- 1
+  
   if (o == "&") # intersectie
   {
+    
+    if (!is.null(X@ref_va_bidimen) & !is.null(Y@ref_va_bidimen) & !identical(X@densitate, Y@densitate)) 
+      # si daca au aceeasi v.a bidimen.... # momentan merge pe intersectie
+    {
+      # aici se face o copie
+      XY <- X@ref_va_bidimen
+      XY@suport[[1]] <- X@suport[[1]]
+      XY@suport[[2]] <- Y@suport[[1]]
+      
+      return (XY)
+    }
+    
     
     for (i in X@suport[[1]])
     {
@@ -136,93 +168,15 @@ op <- function(X, Y, o)
          }
       }
     }
+    
+    return (contRV(densitate = X@densitate, val = X@val, bidimen = X@bidimen, suport = suportNou, 
+                   ref_va_bidimen = X@ref_va_bidimen)) # intoarce contRV pt a integra suportul ramas
   }
-  else # reuniune
+  else # reuniune -- stiu stiu, multe else-uri aiurea dupa return-uri
   {
-    i <- 1
-    j <- 1
-    while (i <= length(X@suport[[1]]) && j <= length(Y@suport[[1]]))
-    {
-       # Formeaza intervale disjuncte in urma reuniunii (se vor intersecta totusi cate doua 
-       # in cel mult un punct, dar acest lucru se neglijeaza la calculul integralei).
-       # Exemplu: [1, 5] U [3, 9] = [1, 3] U [3, 5] U [5, 9]
-      
-       A <- X@suport[[1]][[i]]
-       B <- Y@suport[[1]][[j]]
-       C <- interval_intersect(A, B)
-       
-       if (is.null(C)) # daca sunt disjuncte
-       {
-         # ordonam crescator dupa capatul inferior
-         if (A[1] < B[1])
-         {
-           suportNou[[nr]] <- A
-           suportNou[[nr+1]] <- B
-         }
-         else
-         {
-           suportNou[[nr]] <- B
-           suportNou[[nr+1]] <- A
-         }
-         
-         nr <- nr + 2
-       }
-       else
-       {
-         if (A[1] < B[1])
-         {
-           suportNou[[nr]] <- c(A[1], B[1])
-           
-           if (A[2] < B[2])
-           {
-             suportNou[[nr+1]] <- c(B[1], A[2])
-             suportNou[[nr+2]] <- c(A[2], B[2])
-           }
-           else
-           {
-             suportNou[[nr+1]] <- c(B[1], B[2])
-             suportNou[[nr+2]] <- c(B[2], A[2])
-           }
-         }
-         else
-         {
-           suportNou[[nr]] <- c(B[1], A[1])
-           
-           if (A[2] < B[2])
-           {
-             suportNou[[nr+1]] <- c(A[1], A[2])
-             suportNou[[nr+2]] <- c(A[2], B[2])
-           }
-           else
-           {
-             suportNou[[nr+1]] <- c(A[1], B[2])
-             suportNou[[nr+2]] <- c(B[2], A[2])
-           }
-         }
-         nr <- nr + 3
-       }
-       
-       i <- i + 1
-       j <- j + 1
-    }
-    
-    while (i <= length(X@suport[[1]]))
-    {
-       suportNou[[nr]] <- X@suport[[1]][[i]]
-       nr <- nr + 1
-       i <- i + 1
-    }
-    
-    while (j <= length(Y@suport[[1]]))
-    {
-      suportNou[[nr]] <- Y@suport[[1]][[j]]
-      nr <- nr + 1
-      j <- j + 1
-    }
+    return (prob(X) + prob(Y) - prob(X %AND% Y)) # aici intoarce deja probabilitatea calculata
+    # problema este ca nu se mai pot aplica alte operatii pe v.a 
   }
-  
-  return (contRV(densitate = X@densitate, val = X@val, bidimen = X@bidimen, suport = suportNou,
-                 densitateX = X@densitateX, densitateY = X@densitateY))
 }
 
 
@@ -230,7 +184,53 @@ op <- function(X, Y, o)
 # X si Y pot fi expresii de tipul Z <= x, Z %AND% W etc.
 cond <- function (X, Y)
 {
-  return (integrala(X %AND% Y) / integrala(Y)) # P(X ∩ Y) / P(Y)
+  if (!is.null(X@ref_va_bidimen))
+  {
+     # aici probabil ar trebui verificat daca X si Y referintiaza aceeasi v.a bidimensionala
+     XY <- X@ref_va_bidimen
+     fx_cond_y <- dens_condit_x_la_y(XY)
+     
+     if (length(Y@suport[[1]]) == 0) # inseamna ca nu a fost gasit y in suportul lui Y
+     {
+       return (0)
+     }
+
+     if (length(Y@suport[[1]]) != 1  || Y@suport[[1]][[1]][[1]] != Y@suport[[1]][[1]][[2]])
+     {
+        stop("Nu pot calcula asa ceva! Suportul lui Y trebuie sa fie un singur punct!!")
+     }
+     
+     
+     yfixat <- Y@suport[[1]][[1]][[1]]
+     
+     sum <- 0
+     for (i in X@suport[[1]]) {
+       tryCatch(sum <- sum + integrate(fx_cond_y, i[1], i[2], y = yfixat, abs.tol = 1.0e-13)$value,
+                error= function(err)
+                {
+                  stop("Integrala a esuat.")  
+                })
+     }
+     return (sum)
+     
+     
+  }
+  else
+  {
+     return (integrala(X %AND% Y) / integrala(Y)) # P(X ∩ Y) / P(Y)
+  }
+}
+
+# construieste o v.a continua pornind de la densitatea marginala a lui X in v.a bidimen (X, Y)
+marginalaX <- function(XY)
+{
+  return (contRV(densitate = integrala(XY, 2), suport = XY@suport[[1]], bidimen = FALSE, ref_va_bidimen = XY))
+}
+
+# construieste o v.a continua pornind de la densitatea marginala a lui Y in v.a bidimen (X, Y)
+marginalaY <- function(XY)
+{
+  return (contRV(densitate = integrala(XY, 1), suport = XY@suport[[2]], bidimen = FALSE, ref_va_bidimen = XY))
 }
 
 
@@ -245,5 +245,16 @@ cond <- function (X, Y)
 # Z <- contRV(densitate = Vectorize(func), bidimen = FALSE, suport = list(c(-1, 1)))
 # P(Z <= 0) == 0.5
 # P((Z <= 0.5) %AND% (Z >= -0.7)) == 0.83
-# P((Z <= 0.5) %OR% (Z >= -0.7)) == 1
+# P(((Z <= 0.5) %AND% (Z >= -0.7)) %OR% (Z <= 1)) == 1
 # P(Z >= 0.1 | Z <= 0.8) == 0.3928572
+
+#XY <- contRV(densitate = function (x, y) (6/7) * (x+y)^2,
+#            bidimen = TRUE,
+#            suport = list(list(c(0, 1)), list(c(0, 1))))
+
+#X <- marginalaX(XY)
+#Y <- marginalaY(XY)
+
+# de scris exemple clare 
+# P((X <= 0.5) %AND% (X >= 0.2) | Y == 0.2) == 0.1622093
+# 

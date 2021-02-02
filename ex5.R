@@ -167,8 +167,7 @@ media <- function(X)
   
   # more evil R magic
   subIntegrala <- Vectorize(subIntegrala)
-  tmp <- contRV(densitate = subIntegrala, val = Vectorize(function(...) {retval <- 1}), bidimen = X@bidimen, suport = X@suport,
-                densitateX = X@densitateX, densitateY = X@densitateY)
+  tmp <- contRV(densitate = subIntegrala, val = Vectorize(function(...) {retval <- 1}), bidimen = X@bidimen, suport = X@suport)
   
   tryCatch(retval <- integrala(tmp),
            error=function(err){
@@ -203,8 +202,7 @@ dispersia <- function(X)
     coefRaised(...) * X@densitate(...)
   }
   subIntegrala <- Vectorize(subIntegrala)
-  tmp <- contRV(densitate = subIntegrala, val = Vectorize(function(...) {retval <- 1}), bidimen = X@bidimen, suport = X@suport,
-                densitateX = X@densitateX, densitateY = X@densitateY)
+  tmp <- contRV(densitate = subIntegrala, val = Vectorize(function(...) {retval <- 1}), bidimen = X@bidimen, suport = X@suport)
   
   tryCatch(retval <- integrala(tmp),
            error= function(err)
@@ -259,8 +257,7 @@ moment_centrat <- function(X, ordin)
     coefRaised(...) * X@densitate(...)
   }
   subIntegrala <- Vectorize(subIntegrala)
-  tmp <- contRV(densitate = subIntegrala, val = Vectorize(function(...) {retval <- 1}), bidimen = X@bidimen, suport = X@suport,
-                densitateX = X@densitateX, densitateY = X@densitateY)
+  tmp <- contRV(densitate = subIntegrala, val = Vectorize(function(...) {retval <- 1}), bidimen = X@bidimen, suport = X@suport)
   
   tryCatch(retval <- integrala(tmp),
            error= function(err)
@@ -298,8 +295,7 @@ moment_initial <- function(X, ordin)
     coefRaised(...) * X@densitate(...)
   }
   subIntegrala <- Vectorize(subIntegrala)
-  tmp <- contRV(densitate = subIntegrala, val = Vectorize(function(...) {retval <- 1}), bidimen = X@bidimen, suport = X@suport,
-                densitateX = X@densitateX, densitateY = X@densitateY)
+  tmp <- contRV(densitate = subIntegrala, val = Vectorize(function(...) {retval <- 1}), bidimen = X@bidimen, suport = X@suport)
   
   tryCatch(retval <- integrala(tmp),
            error= function(err)

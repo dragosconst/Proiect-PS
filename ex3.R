@@ -5,18 +5,26 @@
 # -val: field care reprezinta ce pun sub integrala inainte de f(x)dx la medie
 
 # pt v.a bidimensionala (X, Y) slotul densitate retine densitatea comuna a lui X si Y
-# densitateX: densitatea (marginala) a v.a X in cadrul v.a bidimensionale (X, Y)
 # suport[[1]] este suportul densitatii lui X(sau suportul densitatii in cazul v.a unidimensionale)
 # suport[[2]] este suportul lui Y
-setClass("contRV", slots=list(densitate="function", val="function", bidimen="logical", suport="list",
-                              densitateX = "function", densitateY = "function"))
+# In cazul in care v.a X este marginala, ref_va_bidimen va fi o referinta catre v.a bidimensionala. 
+#    Se foloseste pt determinarea densitatii comune la calculul unor probabilitati
+setClass("contRV", representation (
+    densitate="function", 
+    val="function",
+    bidimen="logical",
+    suport="list", 
+    ref_va_bidimen = "contRV_or_NULL"
+))
 
-# un fel de constructor
+setClassUnion("contRV_or_NULL", c("contRV", "NULL"))
+
+
+# constructor
 # Pentru v.a unidimensionala parametrul suport va fi lista intervalelor(nu lista de liste, ca mai jos!)
 # Pentru v.a bidimensionala (X, Y) parametrul suport va fi o lista ce contine 
     # 2 liste corespunzatoare suportului densitatii lui X, respectiv Y
-contRV <- function(densitate, val = function(x) x, bidimen = FALSE, suport = list(c(-Inf, Inf)),
-                   densitateX = function(x) NULL, densitateY = function(x) NULL)
+contRV <- function(densitate, val = function(x) x, bidimen = FALSE, suport = list(c(-Inf, Inf)), ref_va_bidimen = NULL)
 {
     
     # aici de verificat daca functia data este densitate de probabilitate
@@ -29,7 +37,7 @@ contRV <- function(densitate, val = function(x) x, bidimen = FALSE, suport = lis
         val = function(x, y) x * y
     
     obj <- new("contRV", densitate = densitate, val = val, bidimen = bidimen,
-               suport = suport, densitateX = densitateX, densitateY = densitateY)
+               suport = suport, ref_va_bidimen = ref_va_bidimen)
     
     return (obj)
 }
@@ -47,7 +55,7 @@ if (!isGeneric("%AND%"))
     setGeneric("%AND%", function(e1, e2) standardGeneric("%AND%"))
 if (!isGeneric("%OR%"))
     setGeneric("%OR%", function(e1, e2) standardGeneric("%OR%"))
-    
+
 
 # pentru calcularea probabilitatilor la ex.7
 setMethod("<", c("contRV", "numeric"), function (e1, e2) {
@@ -61,6 +69,9 @@ setMethod(">", c("contRV", "numeric"), function (e1, e2) {
 })
 setMethod(">=", c("contRV", "numeric"), function (e1, e2) {
     comp(e1, e2, ">=")
+})
+setMethod("==", c("contRV", "numeric"), function (e1, e2) {
+    comp(e1, e2, "==")
 })
 setMethod("%AND%", c("contRV", "contRV"), function (e1, e2) {
     op(e1, e2, "&")
@@ -84,9 +95,9 @@ setMethod("P", "numeric",
 
 
 setMethod("E", "contRV",
-           function(object){
+          function(object){
               return(media(object))
-           })
+          })
 setMethod("Var", "contRV",
           function(object) return(dispersia(object)))
 
@@ -99,7 +110,8 @@ compunere <- function(f, g)
 # aici nu sunt 100% sigur daca f trebuie vectorizata dinainte
 setMethod("aplica", "contRV",
           function(object, f){
-              retval <- contRV(object@densitate, Vectorize(compunere(f, object@val)), object@bidimen, object@suport[[1]])
+              retval <- contRV(object@densitate, Vectorize(compunere(f, object@val)), object@bidimen, object@suport[[1]],
+                               ref_va_bidimen = ref_va_bidimen)
           })
 
 # supraincarcare functie de afisare
@@ -139,7 +151,7 @@ func <- function(x)
 #X
 
 #test
-A <- contRV(densitate = function (x, y) 6/7(x+y)^2,
-            bidimen = TRUE, suport = list(list(c(0, 1)), list(c(0, 1))))
+#A <- contRV(densitate = function (x, y) 6/7(x+y)^2,
+#            bidimen = TRUE, suport = list(list(c(0, 1)), list(c(0, 1))))
 
-integrala(A, dt = 1)
+#integrala(A, dt = 1)

@@ -82,6 +82,45 @@ integrala <- function(X, dt = 0)
       
       return(funcs[[length(funcs)]])
     }
+    else if(dt == dy) # derivare doar pe y
+    {
+      funcs <- vector()
+      factory <- function(i1, i2, pas)
+      {
+        i1; i2; pas; # pt closure
+        if(pas == 1)
+        {
+          tmpF <-  Vectorize(function(x) {
+            sapply(x, function(x) { 
+              integrate(function(y) X@densitate(x,y),i1,i2)$value
+            })
+          })
+          funcs <<- c(funcs, tmpF)
+        }
+        else
+        {
+          tmpF <-  Vectorize(function(x) {
+            sapply(x, function(x) { 
+              integrate(function(y) X@densitate(x,y),i1,i2)$value
+            })
+          })
+          
+          newF <- Vectorize(function(x){
+            tmpF(x) + funcs[[pas - 1]](x)
+          })
+          funcs <<- c(funcs, newF)
+        }
+      }
+      
+      pas <- 0
+      for(i in X@suport[[1]])
+      {
+        pas <- pas + 1
+        factory(i[1], i[2], pas)
+      }
+      
+      return(funcs[[length(funcs)]])
+    }
   }
   else
   {

@@ -4,6 +4,9 @@
 # Am introdus parametrul dt ca sa putem deriva o densitate comuna dx, respectiv dy, pentru marginale.
 integrala <- function(X, dt = 0)
 {
+  dx <- 1
+  dy <- 2
+  
   if(X@bidimen)
   {
     if(dt ==0)
@@ -32,6 +35,52 @@ integrala <- function(X, dt = 0)
       }
       
       return(sum)
+    }
+    else if(dt == dx) # derivare doar pe x
+    {
+    #   Ok, deci ideea care mi a venit aici este sa construiesc un vector de functii asa:
+    #   f_i+1 (y) = (integrala pe [a_i+1,b_i+1]dx) + f_i(y)
+    #   Nu stiu alta modalitate de a construi o functie care are si gauri pe intervale
+     
+      funcs <- vector()
+      # Asta sigur o sa arate ciudat, nu prea am cum sa explic ce am facut aici fara sa ma intind pe o groaza de linii. Va recomand sa
+      # cititi despre conceptul de closure https://en.wikipedia.org/wiki/Closure_(computer_programming) https://stackoverflow.com/questions/12481404/how-to-create-a-vector-of-functions
+      #  ca sa va faceti o idee de ce fac aici.
+      factory <- function(i1, i2, pas)
+      {
+        i1; i2; pas; # pt closure
+        if(pas == 1)
+        {
+          tmpF <-  Vectorize(function(y) {
+                                sapply(y, function(y) { 
+                                  integrate(function(x) X@densitate(x,y),i1,i2)$value
+                                })
+          })
+          funcs <<- c(funcs, tmpF)
+        }
+        else
+        {
+          tmpF <-  Vectorize(function(y) {
+                                sapply(y, function(y) { 
+                                  integrate(function(x) X@densitate(x,y),i1,i2)$value
+                                })
+          })
+          
+          newF <- Vectorize(function(y){
+            tmpF(y) + funcs[[pas - 1]](y)
+          })
+          funcs <<- c(funcs, newF)
+        }
+      }
+      
+      pas <- 0
+      for(i in X@suport[[1]])
+      {
+        pas <- pas + 1
+        factory(i[1], i[2], pas)
+      }
+      
+      return(funcs[[length(funcs)]])
     }
   }
   else

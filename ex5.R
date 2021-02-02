@@ -113,7 +113,7 @@ integrala <- function(X, dt = 0)
       }
       
       pas <- 0
-      for(i in X@suport[[1]])
+      for(i in X@suport[[2]])
       {
         pas <- pas + 1
         factory(i[1], i[2], pas)

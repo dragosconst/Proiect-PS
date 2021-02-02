@@ -11,8 +11,8 @@ den.normala <- function(m = 0, s = 1) {
 
 rep.normala <- function(m = 0, s = 1) {
   curve(expr = pnorm(x, m, s),
-        from = -9 * s,
-        to   =  9 * s,
+        from = m - 3 * s,
+        to   = m + 3 * s,
         ylab = "probabilitate",
         main = "Funcția repartiție normală")
 }

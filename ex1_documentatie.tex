@@ -1,0 +1,67 @@
+\documentclass[12pt, twoside]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{listings}
+\lstdefinestyle{myCustomRStyle}{
+	language=R,
+	numbers=left,
+	stepnumber=1,
+	numbersep=10pt,
+	tabsize=2,
+	showspaces=false,
+	showstringspaces=false
+}
+\lstset{basicstyle=\small,style=myCustomRStyle}
+\usepackage{amsfonts}
+
+\title{ex1 & ex 8}
+\author{Ristea Mihai}
+\date{February 2021}
+
+\begin{document}
+	
+\textbf{1) Fiind dată o funcție f , introdusă de utilizator, determinarea unei constante de
+	normalizare k. In cazul in care o asemenea constantă nu există, afișarea unui mesaj
+	corespunzător către utilizator}\vspace{5mm}
+
+\begin{lstlisting}
+Nor_constant <- function(Func) {
+if(any(sapply(seq(-100, 100, length.out = 1000), Func) < 0)){
+  stop("Functie negativa")
+  #daca functia are valori negative nu pot calcula constanta
+  #de normalizare
+}
+else {
+  tryCatch(integ <- integrate(Vectorize(Func), lower = -Inf,
+   upper = Inf)$value,
+  error= function(err)
+  {
+    stop("Integrala e divergenta")
+    #daca integrala nu poate fi calculata returnez
+    #un mesaj de eroare
+  })
+  if(integ == 0)
+  stop("Nu exista constanta de normalizare pentru functia data")
+  #daca integrala = 0 inseamna ca nu exista constanta de normalizare
+  const <- 1/integ
+  return(const)
+}
+	
+}
+\end{lstlisting}
+
+\begin{center}
+	\begin{tabular}{ c c }
+		Nor\underline{\hspace{.08in}}const & Denumirea functiei \\
+		Func & Functia data ca parametru \\
+		integ & Variabila in care se salveaza valoarea integralei \\
+		const & Variabila in care se salveaza constanta de normalizare pentru return
+	\end{tabular}
+\end{center}
+\vspace{30mm}
+
+	Functia Nor\underline{\hspace{.08in}}constant returneaza constanta de normalizare a functiei data ca parametru.\hfill \break
+	\indent Incepe prin a verifica pe mai multe valori pozitivitatea functiei primita ca parametru. Daca aceasta functie intoarce valori negative afiseaza un mesaj corespunzator, constanta de normalizare se poate calcula doar pe functii strict pozitive.\hfill \break
+	\indent Daca aceasta conditie este indeplinita continua la calcularea integralei pe (-$\infty, \infty$$ )$. Daca integrala este 0 inseamna ca nu exista constanta de normalizare si afiseaza un mesaj. \hfill \break
+	\indent In final, ridica rezultatul integralei la puterea -1 pentru a obtine constanta de normalizare si o returneaza.
+
+\end{document}

@@ -1,12 +1,10 @@
 Package: contRV
 Type: Package
-Title: What the Package Does (Title Case)
-Version: 0.1.0
-Author: Who wrote it
+Title: Variabile aleatoare continue
+Version: 1.0
+Author: Tantaru Dragos-Constantin, Ristea Mihai-Cristian, Vasiliu Florin, Vintila Eduard-Ionut
 Depends: methods
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Description: Lucru cu variabile aleatoare continue
+License: ?
 Encoding: UTF-8
 LazyData: true

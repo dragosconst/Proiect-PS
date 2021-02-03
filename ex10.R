@@ -33,11 +33,9 @@ Cor <- function(Z)
 
 
 # Pentru teste:
-Z <- contRV(densitate = function (x, y) (6/7) * (x+y)^2,
-            bidimen = TRUE,
-            suport = list(list(c(0, 1)), list(c(0, 1))))
-            #densitateX = function(x) 6/7 * (x^2 + x + 1/3),
-            #densitateY = function(y) 6/7 * (y^2 + y + 1/3))
+# Z <- contRV(densitate = function (x, y) (6/7) * (x+y)^2,
+#             bidimen = TRUE,
+#             suport = list(list(c(0, 1)), list(c(0, 1))))
 
 #Cov(Z)
 #Cor(Z)

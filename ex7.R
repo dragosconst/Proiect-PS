@@ -134,25 +134,31 @@ func <- function(x)
 op <- function(X, Y, o)
 {
   
-  
-  
   suportNou <- list()
   nr <- 1
   
   if (o == "&") # intersectie
   {
     
-    if (!is.null(X@ref_va_bidimen) & !is.null(Y@ref_va_bidimen) & !identical(X@densitate, Y@densitate)) 
-      # si daca au aceeasi v.a bidimen.... # momentan merge pe intersectie
+    if (!identical(X@densitate, Y@densitate)) 
     {
       # aici se face o copie
-      XY <- X@ref_va_bidimen
+      XY <- NULL
+      
+      if (!is.null(X@ref_va_bidimen))
+      {
+        XY <- X@ref_va_bidimen 
+      }
+      else
+      {
+        XY <- contRV(densitate = function(x, y) {X@densitate(x) * Y@densitate(y)}, bidimen = TRUE)
+      }
+      
       XY@suport[[1]] <- X@suport[[1]]
       XY@suport[[2]] <- Y@suport[[1]]
       
       return (XY)
     }
-    
     
     for (i in X@suport[[1]])
     {
@@ -248,13 +254,37 @@ marginalaY <- function(XY)
 # P(((Z <= 0.5) %AND% (Z >= -0.7)) %OR% (Z <= 1)) == 1
 # P(Z >= 0.1 | Z <= 0.8) == 0.3928572
 
-#XY <- contRV(densitate = function (x, y) (6/7) * (x+y)^2,
-#            bidimen = TRUE,
-#            suport = list(list(c(0, 1)), list(c(0, 1))))
-
-#X <- marginalaX(XY)
-#Y <- marginalaY(XY)
+# XY <- contRV(densitate = function (x, y) (6/7) * (x+y)^2,
+#             bidimen = TRUE,
+#             suport = list(list(c(0, 1)), list(c(0, 1))))
+# 
+# X <- marginalaX(XY)
+# Y <- marginalaY(XY)
 
 # de scris exemple clare 
 # P((X <= 0.5) %AND% (X >= 0.2) | Y == 0.2) == 0.1622093
 # 
+
+# P((X <= 0.7) %AND% (Y >= 0.5))
+# 
+# func2 <- function(x)
+# {
+#   if (x < 2 & x > 0)
+#     3/8 * (4 * x - 2 * x^2)
+#   else
+#     0
+# }
+# 
+# func3 <- function(x)
+# {
+#   if (x >= 0)
+#   {
+#     1/96 * (x^3 * exp(-x/2))
+#   }
+#   else
+#     0
+# }
+# 
+# X <- contRV(densitate = Vectorize(func3), bidimen = FALSE, suport = list(c(0, Inf)))
+# Y <- contRV(densitate = Vectorize(func2), bidimen = FALSE, suport = list(c(0, 2)))
+# P((X <= 3) %AND% (Y >= 1))

@@ -1,0 +1,7 @@
+exportPattern("^[[:alpha:]]+")
+exportMethods("P")
+exportMethods("E")
+exportMethods("Var")
+exportMethods("aplica")
+exportMethods("%OR%")
+exportMethods("%AND%")

@@ -1,5 +1,5 @@
 #fiecare repartitie este salvata intr-o lista de String, fiecare 2 elemente din lista fiind subtitlul(cu indentare) si informatia respectiva
-rep_uniforma <- c("    Definitie:","O v.a. U este repartizata uniform pe intervalul (a,b) daca admite densitatea de repartitie f(x)=1/(b-1), x ∈ (a,b).",
+rep_uniforma <- c("    Definitie:","O v.a. U este repartizata uniform pe intervalul (a,b) daca admite densitatea de repartitie f(x)=1/(b-1), x in (a,b).",
                   "    Utilizare:","Se foloseste atunci cand numarul cazurilor posibile tinde la infinit",
                   "    Notatie:","U ~ U((a,b)), unde (a,b) este intervalul pe care este repartizata variabila aleatoare",
                   "    Media:","E[U] = integrala de la -Inf la Inf din x*f(x) dx = (a+b)/2",
@@ -14,7 +14,7 @@ rep_exponentiala <- c("    Definitie:","O v.a. X este repartizata exponential de
                       "    Sursa:","Curs 10, Probabilitati si Statistica, Prof. Alexandru Amarioarei")
 
 
-rep_normala <- c("    Definitie:","Spunem ca o v.a. X este repartizata normal (sau Gaussian) de parametru miu si sigma^2 daca admite densitatea f(x) = (1/(sqrt(2pi)*sigma))*e^(-(x-miu)^2/2*sigma^2), unde x ∈ R)",
+rep_normala <- c("    Definitie:","Spunem ca o v.a. X este repartizata normal (sau Gaussian) de parametru miu si sigma^2 daca admite densitatea f(x) = (1/(sqrt(2pi)*sigma))*e^(-(x-miu)^2/2*sigma^2), unde x in R)",
                  "    Notatie:","X ~ N(miu,sigma^2)","In cazul in care miu = 0 si sigma = 1 spunem ca v.a. X este repartizata normal standard si notam X ~ N(0,1) si putem calcula:",
                  "    Media:","E[U] = integrala de la -Inf la Inf din x*f(x) dx = 0",
                  "    Variatia:","Var(U) = E[U^2]-E[U]^2 = 1 - 0 = 1",
@@ -28,7 +28,7 @@ rep_gamma   <- c("    Definitie:","O v.a. X este repartizata Gamma cu parametrii
                  "    Sursa:","http://math.etc.tuiasi.ro/rstrugariu/cursuri/SPD2015/c7.pdf")
 
 
-rep_beta    <- c("    Definitie:","O v.a. X are repartitie Beta daca densitatea sa de probabilitate este de forma: f(x,a,b) = (1/(beta(a,b))) * x^(a-1) * (1-x)^(b-1), pentru x ∈ [0,1], unde a > 0 si b > 0 si beta(a,b) = integrala de la 0 la 1 din x^(a-1)*(1-x)^(b-1) dx ",
+rep_beta    <- c("    Definitie:","O v.a. X are repartitie Beta daca densitatea sa de probabilitate este de forma: f(x,a,b) = (1/(beta(a,b))) * x^(a-1) * (1-x)^(b-1), pentru x in [0,1], unde a > 0 si b > 0 si beta(a,b) = integrala de la 0 la 1 din x^(a-1)*(1-x)^(b-1) dx ",
                  "    Notatie:","",
                  "    Media:","E[U] = integrala de la -Inf la Inf din x*f(x) dx = a/(a+b)",
                  "    Variatia:","Var(U) = E[U^2]-E[U]^2 = ab/((a+b)^2*(a+b+1)) ",
@@ -56,5 +56,5 @@ Fisa_sinteza <- function(Rep){
   {
     print(i)
   }
-  
+
 }

@@ -17,6 +17,7 @@ setClass("contRV", representation (
     ref_va_bidimen = "contRV_or_NULL"
 ))
 
+# Am folosit acest union pentru a permite referintei catre v.a bidimen sa fie nula
 setClassUnion("contRV_or_NULL", c("contRV", "NULL"))
 
 
@@ -33,13 +34,25 @@ contRV <- function(densitate, val = function(x) x, bidimen = FALSE, suport = lis
     # o v.a.c. ca sa calculam o integrala, daca nu era bidimensionala, ii tot imbrica lista de suport si in final dadea eroare la integrala.
     if(length(suport) < 2)
         suport <- list(suport, list())
-    if (bidimen && missing(val))
+    if (bidimen & missing(val))
         val = function(x, y) x * y
 
     obj <- new("contRV", densitate = densitate, val = val, bidimen = bidimen,
                suport = suport, ref_va_bidimen = ref_va_bidimen)
 
     return (obj)
+}
+
+# construieste o v.a continua pornind de la densitatea marginala a lui X in v.a bidimen (X, Y)
+marginalaX <- function(XY)
+{
+    return (contRV(densitate = integrala(XY, 2), suport = XY@suport[[1]], bidimen = FALSE, ref_va_bidimen = XY))
+}
+
+# construieste o v.a continua pornind de la densitatea marginala a lui Y in v.a bidimen (X, Y)
+marginalaY <- function(XY)
+{
+    return (contRV(densitate = integrala(XY, 1), suport = XY@suport[[2]], bidimen = FALSE, ref_va_bidimen = XY))
 }
 
 
@@ -151,7 +164,7 @@ func <- function(x)
 #X
 
 #test
-#A <- contRV(densitate = function (x, y) 6/7(x+y)^2,
-#            bidimen = TRUE, suport = list(list(c(0, 1)), list(c(0, 1))))
+XY <- contRV(densitate = function (x, y) 6/7(x+y)^2,
+           bidimen = TRUE, suport = list(list(c(0, 1)), list(c(0, 1))))
 
 #integrala(A, dt = 1)

@@ -1,0 +1,111 @@
+\documentclass[12pt]{article}
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{enumitem}
+\usepackage[Export]{adjustbox}
+\usepackage{cancel}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\usepackage{graphicx}
+\usepackage[margin = 1in]{geometry}
+\usepackage{blindtext}
+\usepackage[section]{placeins}
+\usepackage{xcolor,listings}
+\usepackage{textcomp}
+\usepackage[utf8]{inputenc}
+\lstset{upquote=true}
+\lstdefinestyle{myCustomRStyle}{
+	language=R,
+	numbers=left,
+	stepnumber=1,
+	numbersep=10pt,
+	tabsize=2,
+	showspaces=false,
+	breaklines=true
+	showstringspaces=false
+}
+\lstset{basicstyle=\small,style=myCustomRStyle}
+\usepackage{amsfonts}
+\graphicspath{ {./images/} }
+
+\pagestyle{fancy}
+\fancyhead{}
+\fancyfoot{}
+\usepackage[T1]{fontenc}
+\fancyhead[L]{Placeholder}
+\fancyhead[R]{Placeholder}
+\setlength{\headheight}{25pt}
+\fancyfoot[C]{\thepage}
+\title{Placeholder}
+\author{Placeholder}
+
+\begin{document}
+	%\section*{Cerința 4}
+	\textbf{Crearea unui obiect de tip variabilă aleatoare continuă pornind de la o densitate de
+		probabilitate introdusă de utilizator. Funcția trebuie să aibă opțiunea pentru variabile
+		aleatoare unidimensionale și respectiv bidimensionale.}\vspace{5mm}
+	
+	Pentru a facilita lucrul cu variabile aleatoare continue atât unidimensionale, cât si bidimensionale, am definit clasa de tip S4 numită \textbf{contRV}. Toate instanțele acestei clase vor reține o mulțime de informații necesare pentru a efectua diverse operații pe variabile aleatoare continue. Mai precis, fiecare obiect \textbf{contRV} va avea asoicat:
+	\begin{itemize}
+		\item O densitate de probabilitate.
+		\item Un Boolean ce indică dacă variabila aleatoare este bidimensională.
+		\item Suportul densității de probabilitate. În cazul variabilelor unidimensionale, acesta este reprezentat de o listă de intervale închise. Pentru o v.a bidimensională $(X, Y)$, suportul este reținut sub forma unei liste ce conține suporturile lui $X$ și $Y$.
+		\item Pentru o v.a unidimensională $X$, o referință către v.a bidimensională $(X, Y)$, în cazul in care $X$ s-a format în urma determinării densității marginale. Se folosește pentru a avea acces cu ușurință la densitatea comună în calculul unor probabilități ce implică pe $X$ și $Y$.
+		% AICI DE MENTIONAT SI SLOTUL "VAL" AL LUI DRAGOS!
+	\end{itemize}\vspace*{1\baselineskip} \par
+	Motivul pentru care este necesară specificarea suportului densității la crearea unui obiect de tip \textbf{contRV} este următorul: la calculul integralelor unde unul dintre capete nu este un număr finit, comportamentul funcției \lstinline|integrate()| poate produce rezultate neașteptate(de introdus exemple). Astfel, restricționând domeniul la punctele în care integrandul ia valori nenule, calculul integralei devine mult mai precis.
+	În stadiul actual însă, permitem ca suportul densitații să fie specificat doar ca o reuniune de intervale inchise în cazul v.a unidimensionale, sau dreptunghiuri în cazul celor bidimensionale.\vspace*{1\baselineskip}\par
+	
+	Definiția clasei este următoarea:
+	\begin{lstlisting}
+		setClass("contRV", representation (
+		densitate="function",
+		val="function",
+		bidimen="logical",
+		suport="list",
+		ref_va_bidimen = "contRV_or_NULL"
+		))
+		
+		# Am folosit acest union pentru a permite referintei catre v.a bidimen sa fie nula
+		setClassUnion("contRV_or_NULL", c("contRV", "NULL"))
+	\end{lstlisting}\pagebreak
+	
+	Pentru a crea un obiect \textbf{contRV}, am definit următorul constructor:
+	\begin{lstlisting}
+		contRV <- function(densitate, val = function(x) x, bidimen = FALSE, suport = list(c(-Inf, Inf)), ref_va_bidimen = NULL)
+		{
+			
+			# aici de verificat daca functia data este densitate de probabilitate
+			
+			# Metoda precedenta era foarte buna, singura problema e ca daca faceam artificii de cod, de ex facem
+			# o v.a.c. ca sa calculam o integrala, daca nu era bidimensionala, ii tot imbrica lista de suport si in final dadea eroare la integrala.
+			if(length(suport) < 2)
+				suport <- list(suport, list())
+			if (bidimen & missing(val))
+				val = function(x, y) x * y
+			
+			obj <- new("contRV", densitate = densitate, val = val, bidimen = bidimen, suport = suport, ref_va_bidimen = ref_va_bidimen)
+			
+			return (obj)
+		}
+	\end{lstlisting}
+
+	De exemplu, pentru crearea unui obiect \textbf{contRV} ce reprezintă o variabilă aleatoare continuă bidimensională $(X, Y)$ cu densitatea:
+	\[ 
+	f(x, y)= \left\{
+	\begin{array}{ll}
+		\frac{6}{7}(x+y)^2, & x \in [0, 1] \times [0, 1] \\\\
+		0,				   & \text{în rest}
+	\end{array} 
+	\right. 
+	\]
+	Scriem:
+	\begin{lstlisting}[numbers=none]
+		XY <- contRV(densitate = function (x, y) 6/7(x+y)^2, bidimen = TRUE, suport = list(list(c(0, 1)), list(c(0, 1))))
+	\end{lstlisting}\vspace*{1\baselineskip}
+	
+	
+	De asemenea, clasa \textbf{contRV} pune la dispoziție utilizatorilor pachetului o colecție de metode pentru a efectua operații pe variabile aleatoare continue, precum: calculul probabilităților(cu ajutorul metodei $P$, detalii în exercițiul 7), calculul mediilor și a dispersiilor(metodele $E$ și $Var$, detalii în exercițiile 5-6) și obținerea densitaților marginale(metodele $marginalaX$ și $marginalaY$).
+\end{document}

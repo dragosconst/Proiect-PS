@@ -229,19 +229,6 @@ cond <- function (X, Y)
   }
 }
 
-# construieste o v.a continua pornind de la densitatea marginala a lui X in v.a bidimen (X, Y)
-marginalaX <- function(XY)
-{
-  return (contRV(densitate = integrala(XY, 2), suport = XY@suport[[1]], bidimen = FALSE, ref_va_bidimen = XY))
-}
-
-# construieste o v.a continua pornind de la densitatea marginala a lui Y in v.a bidimen (X, Y)
-marginalaY <- function(XY)
-{
-  return (contRV(densitate = integrala(XY, 1), suport = XY@suport[[2]], bidimen = FALSE, ref_va_bidimen = XY))
-}
-
-
 # Teste
 # Y nu este o v.a, se foloseste pt a testa operatiile de tip intersectie si reuniune de intervale
 # Y <- contRV(densitate = function(x) x, bidimen = FALSE, suport = list(c(0, 2), c(4, 7), c(9, 11)))

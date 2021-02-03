@@ -164,7 +164,7 @@ func <- function(x)
 #X
 
 #test
-XY <- contRV(densitate = function (x, y) 6/7(x+y)^2,
-           bidimen = TRUE, suport = list(list(c(0, 1)), list(c(0, 1))))
+# XY <- contRV(densitate = function (x, y) 6/7(x+y)^2,
+#            bidimen = TRUE, suport = list(list(c(0, 1)), list(c(0, 1))))
 
 #integrala(A, dt = 1)

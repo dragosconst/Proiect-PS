@@ -1,0 +1,52 @@
+\documentclass[12pt, twoside]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{listings}
+\lstdefinestyle{myCustomRStyle}{
+	language=R,
+	numbers=left,
+	stepnumber=1,
+	numbersep=10pt,
+	tabsize=2,
+	showspaces=false,
+	showstringspaces=false
+}
+\lstset{basicstyle=\small,style=myCustomRStyle}
+\usepackage{amsfonts}
+
+\title{ex 8}
+\author{Ristea Mihai Cristian}
+\date{February 2021}
+
+\begin{document}
+	
+	\textbf{8) Afișarea unei “fișe de sinteză” care să conțină informații de bază despre respectiva
+		repartiție(cu precizarea sursei informației!). Relevant aici ar fi să precizați pentru ce e
+		folosită in mod uzual acea repartiție, semnificația parametrilor, media, dispersia etc.}\vspace{5mm}
+	
+	\begin{lstlisting}
+		#Functia afiseaza informatiile despre o repartitie mai compact
+		#compact = fara spatii goale
+		#De asemenea reprezinta o metoda mai intuitiva de a afisa
+		Fisa_sinteza <- function(Rep){
+			for (i in Rep)
+			{
+				print(i)
+			}
+			
+		}
+	\end{lstlisting}
+	
+	\begin{center}
+		\begin{tabular}{ c c }
+			Fisa\underline{\hspace{.08in}}sinteza & Denumirea functiei \\
+			Rep & Repartitia data ca parametru \\
+			for (i in rep) & Parcurgerea informatiilor din repartitie 
+		\end{tabular}
+	\end{center}
+	\vspace{30mm}
+	
+	Functia Fisa\underline{\hspace{.08in}}sinteza afiseaza informatiile salvate despre repartitia data ca parametru sub forma unei fise de sinteza.\hfill \break
+	\indent Informmatiile sunt salvate intr-o lista de elemente de tip String. Parcurgand lista afisam elementele acesteia pe rand. Aceasta abordare permite afisarea informatiilor compact, apelarea listei in consola afiseaza unele randuri goale in anumite cazuri.
+	
+	
+\end{document}

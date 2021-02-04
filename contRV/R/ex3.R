@@ -27,12 +27,7 @@ setClassUnion("contRV_or_NULL", c("contRV", "NULL"))
     # 2 liste corespunzatoare suportului densitatii lui X, respectiv Y
 contRV <- function(densitate, val = function(x) x, bidimen = FALSE, suport = list(c(-Inf, Inf)), ref_va_bidimen = NULL)
 {
-
-    # aici de verificat daca functia data este densitate de probabilitate
-
-    # Metoda precedenta era foarte buna, singura problema e ca daca faceam artificii de cod, de ex facem
-    # o v.a.c. ca sa calculam o integrala, daca nu era bidimensionala, ii tot imbrica lista de suport si in final dadea eroare la integrala.
-    if(length(suport) < 2)
+   if(length(suport) < 2)
         suport <- list(suport, list())
     if (bidimen & missing(val))
         val = function(x, y) x * y
@@ -119,8 +114,6 @@ compunere <- function(f, g)
     function(...) f(g(...))
 }
 
-# returnez o noua va continua deoarece ar fi greu de lucrat cu pachetul asta daca as modifica direct X
-# aici nu sunt 100% sigur daca f trebuie vectorizata dinainte
 setMethod("aplica", "contRV",
           function(object, f){
               retval <- contRV(object@densitate, Vectorize(compunere(f, object@val)), object@bidimen, object@suport[[1]],

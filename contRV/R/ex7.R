@@ -250,7 +250,6 @@ cond <- function (X, Y)
 # X <- marginalaX(XY)
 # Y <- marginalaY(XY)
 
-# de scris exemple clare
 # P((X <= 0.5) %AND% (X >= 0.2) | Y == 0.2) == 0.1622093
 #
 

@@ -1,15 +1,15 @@
 # Covarianța pentru variabila bidimensională Z, compusă din X și Y
 Cov <- function(Z) {
-  
+
   if (!Z@bidimen) {
     print("Variabila nu este bidimensională!")
     NA
   }
   else {
-    
+
     X <- marginalaX(Z)
     Y <- marginalaY(Z)
-    
+
     return (E(Z) - E(X) * E(Y))
 
   }
@@ -22,12 +22,12 @@ Cor <- function(Z)
     NA
   }
   else {
-    
+
     X <- marginalaX(Z)
     Y <- marginalaY(Z)
-    
+
     return (Cov(Z) / sqrt(Var(X) * Var(Y)))
-    
+
   }
 }
 

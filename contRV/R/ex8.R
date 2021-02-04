@@ -47,8 +47,6 @@ rep_student <- c("    Definitie:","O v.a. X are o distributie T(sau distributie 
                  "    Media:","E[U] = integrala de la -Inf la Inf din x*f(x) dx = 0",
                  "    Variatia:","Var(U) = E[U^2]-E[U]^2 = n/(n-2)",
                  "    Sursa:","http://cs.unitbv.ro/~pascu/stat/Distributii%20continue%20clasice.pdf")
-#TODO
-# notatie pentru rep_beta
 
 # Functia Fisa_sinteza afiseaza informatiile despre o repartitie mai compact(fara randuri goale). De asemenea reprezinta o metoda mai intuitiva de a afisa aceste informatii.
 Fisa_sinteza <- function(Rep){

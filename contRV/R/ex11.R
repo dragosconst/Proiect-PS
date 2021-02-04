@@ -1,4 +1,3 @@
-
 dens_condit_x_de_y <- function(Z)
 {
   dens_marginala_y <- integrala(Z,1)

@@ -29,7 +29,6 @@ rep_gamma   <- c("    Definitie:","O v.a. X este repartizata Gamma cu parametrii
 
 
 rep_beta    <- c("    Definitie:","O v.a. X are repartitie Beta daca densitatea sa de probabilitate este de forma: f(x,a,b) = (1/(beta(a,b))) * x^(a-1) * (1-x)^(b-1), pentru x in [0,1], unde a > 0 si b > 0 si beta(a,b) = integrala de la 0 la 1 din x^(a-1)*(1-x)^(b-1) dx ",
-                 "    Notatie:","",
                  "    Media:","E[U] = integrala de la -Inf la Inf din x*f(x) dx = a/(a+b)",
                  "    Variatia:","Var(U) = E[U^2]-E[U]^2 = ab/((a+b)^2*(a+b+1)) ",
                  "    Sursa:","http://images.wikia.com/nccmn/ro/images/3/37/Capitolul_10_REPARTITII_CLASICE.pdf")

@@ -1,6 +1,3 @@
-
-# Un mic hack cu functia asta e ca daca vreti sa calculati integrala unei functii care nu e explicit densitate,
-# puteti face un obiect contRv cu densitatea functia pe care vreti sa o integrati si val = f(...) = 1 (functia care duce tot in 1).
 # Am introdus parametrul dt ca sa putem deriva o densitate comuna dx, respectiv dy, pentru marginale.
 integrala <- function(X, dt = 0)
 {

@@ -120,36 +120,18 @@ setMethod("aplica", "contRV",
                                ref_va_bidimen = object@ref_va_bidimen)
           })
 
-# supraincarcare functie de afisare
-setMethod("show", "contRV",
-          function (object) {
-              cat("Densitatea de probabilitate: ")
-              print(body(fun = object@densitate))
-
-              cat("Este v.a bidimensionala: ", object@bidimen, "\n")
-
-              cat("Suportul densitatii: ") # de fisat si pt v.a bidimensionale
-              for (i in object@suport[[1]]) {
-                  cat("[", i[1], ",", i[2], "] ") # de afisat si un simbol de reuniune
-              }
-              cat("\n")
-
-              cat("Sub integrala o sa avem: ")
-              print(body(fun = object@val))
-          })
-
 # by Florin
-func <- function(x)
-{
-    if (x < -1)
-        0
-    else if (x < 0)
-        1 + x
-    else if (x < 1)
-        1 - x
-    else
-        0
-}
+# func <- function(x)
+# {
+#     if (x < -1)
+#         0
+#     else if (x < 0)
+#         1 + x
+#     else if (x < 1)
+#         1 - x
+#     else
+#         0
+# }
 
 
 # exemple
@@ -159,5 +141,3 @@ func <- function(x)
 #test
 # XY <- contRV(densitate = function (x, y) 6/7(x+y)^2,
 #            bidimen = TRUE, suport = list(list(c(0, 1)), list(c(0, 1))))
-
-#integrala(A, dt = 1)

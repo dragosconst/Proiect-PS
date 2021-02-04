@@ -92,7 +92,7 @@ setMethod("|", c("contRV", "contRV"), function (e1, e2) {
 })
 setMethod("P", "contRV",
           function (object) {
-              return (prob(object))
+              return (integrala(object)) # integreaza pe suport
           })
 # functie wrapper pentru rezultatul probabilitatii conditionate
 setMethod("P", "numeric",

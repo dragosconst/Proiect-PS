@@ -1,6 +1,10 @@
 # Determina suportul pentru expresii de tipul X <= x, X >= x
 comp <- function(X, x, c)
 {
+
+   if (X@bidimen)
+     stop("Nu se poate compara o v.a bidimensionala cu un numar real!")
+
    suportNou <- list()
    nr <- 1
 
@@ -82,12 +86,6 @@ comp <- function(X, x, c)
                   ref_va_bidimen = X@ref_va_bidimen))
 }
 
-
-prob <- function(X)
-{
-    return(integrala(X))
-}
-
 interval_intersect <- function (A, B)
 {
   # intersectia intervalelor [a, b] si [c, d]
@@ -152,6 +150,7 @@ op <- function(X, Y, o)
       }
       else
       {
+        # consideram ca sunt independente
         XY <- contRV(densitate = function(x, y) {X@densitate(x) * Y@densitate(y)}, bidimen = TRUE)
       }
 
@@ -179,9 +178,9 @@ op <- function(X, Y, o)
     return (contRV(densitate = X@densitate, val = X@val, bidimen = X@bidimen, suport = suportNou,
                    ref_va_bidimen = X@ref_va_bidimen)) # intoarce contRV pt a integra suportul ramas
   }
-  else # reuniune -- stiu stiu, multe else-uri aiurea dupa return-uri
+  else # reuniune
   {
-    return (prob(X) + prob(Y) - prob(X %AND% Y)) # aici intoarce deja probabilitatea calculata
+    return (P(X) + P(Y) - P(X %AND% Y)) # aici intoarce deja probabilitatea calculata
     # problema este ca nu se mai pot aplica alte operatii pe v.a
   }
 }

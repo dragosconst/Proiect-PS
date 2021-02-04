@@ -1,0 +1,88 @@
+\documentclass[12pt]{article}
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{enumitem}
+\usepackage[Export]{adjustbox}
+\usepackage{cancel}
+\usepackage{algorithm}
+\usepackage{bigints}
+\usepackage[noend]{algpseudocode}
+\usepackage{graphicx}
+\usepackage[margin = 1in]{geometry}
+\usepackage{blindtext}
+\usepackage[section]{placeins}
+\usepackage{xcolor,listings}
+\usepackage{hyperref}
+\usepackage{textcomp}
+\usepackage{makecell}
+\usepackage[utf8]{inputenc}
+\lstset{upquote=true}
+\lstdefinestyle{myCustomRStyle}{
+	language=R,
+	backgroundcolor = \color{lightgray!10!white},
+	numbers=left,
+	stepnumber=1,
+	numbersep=10pt,
+	tabsize=2,
+	showspaces=false,
+	breaklines=true
+	showstringspaces=false,
+	basicstyle=\footnotesize\ttfamily,
+	keywordstyle=\bfseries\color{blue!50!black},
+	commentstyle=\itshape\color{orange!60!black},
+	identifierstyle=\color{black},
+	stringstyle=\color{green!50!black},
+	xleftmargin=\parindent,
+	frame=L
+}
+\lstset{literate=%
+	*{0}{{{\color{blue}0}}}1
+	{1}{{{\color{blue}1}}}1
+	{2}{{{\color{blue}2}}}1
+	{3}{{{\color{blue}3}}}1
+	{4}{{{\color{blue}4}}}1
+	{5}{{{\color{blue}5}}}1
+	{6}{{{\color{blue}6}}}1
+	{7}{{{\color{blue}7}}}1
+	{8}{{{\color{blue}8}}}1
+	{9}{{{\color{blue}9}}}1
+}
+
+\lstset{basicstyle=\small,style=myCustomRStyle}
+\usepackage{amsfonts}
+
+
+\pagestyle{fancy}
+\fancyhead{}
+\fancyfoot{}
+\usepackage[T1]{fontenc}
+\fancyhead[L]{contRV}
+\fancyhead[R]{Proiect PS, grupa 244}
+\setlength{\headheight}{25pt}
+\fancyfoot[C]{\thepage}
+\title{Pachet pentru lucrul cu variabile aleatoare continue}
+\author{Țânțaru Dragoș-Constantin, Vasiliu Florin \\Vintilă Eduard-Ionuț, Ristea Mihai-Cristian}
+
+\begin{document}
+\maketitle
+\section{Introducere} \hfill \\
+\indent Pachetul oferă un set de operații uzuale în lucrul cu variabile aleatoare continue, de la calcularea diverselor probabilități, la determinarea densităților condiționate și chiar la animații cu graficele unor repartiții cunoscute. Mai exact, pachetul permite:
+\begin{itemize}
+	\item construirea unui obiect de tip variabilă aleatoare continuă, unidimensională sau bidimensională, cu suport configurabil de utilizator
+	\item calcularea probabilităților, printr-un apel de forma $P(X <= x)$ (avem implementate operațiile $<$, $<=$, $>$, $>=$, $==$)
+	\item calcularea probabilităților condiționate de forma $P(X \ \mathrm{op_1} \ x_1 \ | \ X \ \mathrm{op_2} \ x_2)$, unde $\mathrm{op_1}$ și $\mathrm{op_2}$ sunt oricare din operațiile definite mai sus
+	\item calcularea probabilităților condiționate de forma $P(X \ \mathrm{op} \ x \ | \ Y == y)$, unde Y e orice variabilă aleatoare continuă și op, din nou, orice operație de mai sus
+	\item calcularea mediei, dispersiei și momentelor centrate sau inițiale ale unei variabile aleatoare continue
+	\item aplicarea unor funcții continue asupra variabilelor aleatoare continue și prelucrarea rezultatelor obținute
+	\item afișarea graficelor a diverselor repartiții și densități obișnuite
+	\item observarea efectelor parametrilor asupra densității beta prin intermediul unei animații programate în R
+	\item afișarea unor fișe de sinteză despre repartițiile și densitățiile obișnuite
+	\item și multe alte funcționalități pe care le-am detaliat în documentație
+\end{itemize} \hfill \\
+\indent În mod specific, am rezolvat cerințele 1, 2, 3, 4, 5, 6, 7, 8, 10 și 11 din cerințele proiectului 1. \\
+\indent Dificultățile cele mai importante întâmpinate la implementarea proiectului au fost folosirea eficientă a funcției $integrate$ și gestionarea corectă a variabilelor R, în contextului scoping-ului făcut de R (problemă explicată în detaliu la documentația pentru exercițiul 5). Pe scurt, pe prima am depășit-o scriind o funcție specifică pachetului $integrala$, care face suma integralelor pe suportul variabilelor, iar a doua folosind o funcție de tip „factory”. \\
+\indent Principala limitare a pachetului este tipul de densități comune cu care poate lucra. Deoarece nu am reușit să găsim un mod bun de a stoca suporturi care nu sunt reuniuni de dreptunghiuri $[a, b] \times [c, d]$, pachetul nu permite lucrul cu variabile bidimensionale care au suporturi în care ori $x$, ori $y$ sunt definite pe intervale care depind de cealaltă variabilă. A nu se înțelege că nu se poate lucra cu variabile aleatoare continue dependente, problema apare doar când una dintre variabilele aleatoare are suportul dependent de cealaltă. În schimb, dacă suportul e de forma $\displaystyle \bigcup\limits_{i} ([a_i, b_i] \times [c_i, d_i])$, unde niciuna dintre $a_i, b_i, c_i, d_i$ nu depinde de $x$ sau $y$, se poate folosi fără probleme pachetul. \\
+\indent În continuare, vom lua fiecare exercițiu pe rând și vom documenta implementarea, ideea de rezolvare și problemele întâmpinate. \\
+\end{document}

@@ -1,0 +1,151 @@
+\documentclass[12pt]{article}
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{enumitem}
+\usepackage[Export]{adjustbox}
+\usepackage{cancel}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\usepackage{graphicx}
+\usepackage[margin = 1in]{geometry}
+\usepackage{blindtext}
+\usepackage[section]{placeins}
+\usepackage{xcolor,listings}
+\usepackage{textcomp}
+\usepackage[utf8]{inputenc}
+\lstset{upquote=true}
+\lstdefinestyle{myCustomRStyle}{
+	language=R,
+	backgroundcolor = \color{lightgray!10!white},
+	numbers=left,
+	stepnumber=1,
+	numbersep=10pt,
+	tabsize=2,
+	showspaces=false,
+	breaklines=true
+	showstringspaces=false,
+	basicstyle=\footnotesize\ttfamily,
+	keywordstyle=\bfseries\color{blue!50!black},
+	commentstyle=\itshape\color{orange!60!black},
+	identifierstyle=\color{black},
+	stringstyle=\color{green!50!black},
+	xleftmargin=\parindent,
+	frame=L
+}
+\lstset{literate=%
+	*{0}{{{\color{blue}0}}}1
+	{1}{{{\color{blue}1}}}1
+	{2}{{{\color{blue}2}}}1
+	{3}{{{\color{blue}3}}}1
+	{4}{{{\color{blue}4}}}1
+	{5}{{{\color{blue}5}}}1
+	{6}{{{\color{blue}6}}}1
+	{7}{{{\color{blue}7}}}1
+	{8}{{{\color{blue}8}}}1
+	{9}{{{\color{blue}9}}}1
+}
+
+\lstset{basicstyle=\small,style=myCustomRStyle}
+\usepackage{amsfonts}
+\graphicspath{ {./images/} }
+
+\pagestyle{fancy}
+\fancyhead{}
+\fancyfoot{}
+\usepackage[T1]{fontenc}
+\fancyhead[L]{Placeholder}
+\fancyhead[R]{Placeholder}
+\setlength{\headheight}{25pt}
+\fancyfoot[C]{\thepage}
+\title{Placeholder}
+\author{Placeholder}
+
+\begin{document}
+	\textbf{Calculul covarianței și coeficientului de corelație pentru două variabile aleatoare
+		continue(Atenție: Trebuie să folosiți densitatea comună a celor două variabile
+		aleatoare!)}\vspace{5mm}
+	
+	\section*{Covarianță}
+	\begin{center}
+		\begin{tabular}{|| c | c | c ||}
+			\hline
+			Parametrul & Tipul & Descriere \\
+			\hline
+			\textcolor{blue}{Z} & \textcolor{violet}{contRV} & Variabila aleatoare continuă bidimensională $Z = (X, Y)$ \\
+			
+			\hline
+		\end{tabular}
+	\end{center}\hfill \\
+
+	Funcția \texttt{Cov} calculează covarianța pe baza formulei:
+	\begin{equation*}
+		Cov(X, Y) = E[XY] - E[X] \cdot E[Y]
+	\end{equation*}
+
+	\begin{lstlisting}
+		Cov <- function(Z) {
+			
+			if (!Z@bidimen) {
+				print("Variabila nu este bidimensionala!")
+				NA
+			}
+			else {
+				
+				X <- marginalaX(Z)
+				Y <- marginalaY(Z)
+				
+				return (E(Z) - E(X) * E(Y))
+				
+			}
+		}
+	\end{lstlisting}
+
+	\section*{Coeficientul de corelație}
+	\begin{center}
+		\begin{tabular}{|| c | c | c ||}
+			\hline
+			Parametrul & Tipul & Descriere \\
+			\hline
+			\textcolor{blue}{Z} & \textcolor{violet}{contRV} & Variabila aleatoare continuă bidimensională $Z = (X, Y)$ \\
+			
+			\hline
+		\end{tabular}
+	\end{center}\hfill \\
+	
+	Funcția \texttt{Cor} calculează coeficientul de corelație pe baza formulei:
+	\begin{equation*}
+		\rho(X, Y) = \frac{Cov(X, Y)}{\sqrt{Var(X) \cdot Var(Y))}}
+	\end{equation*}\pagebreak
+	
+	\begin{lstlisting}
+		Cor <- function(Z)
+		{
+			if (!Z@bidimen) {
+				print("Variabila nu este bidimensionala!")
+				NA
+			}
+			else {
+				
+				X <- marginalaX(Z)
+				Y <- marginalaY(Z)
+				
+				return (Cov(Z) / sqrt(Var(X) * Var(Y)))
+				
+			}
+		}
+	\end{lstlisting}\vspace*{2\baselineskip}
+	
+	Exemple:
+	\begin{lstlisting}
+		> Z <- contRV(densitate = function (x, y) (6/7) * (x+y)^2,
+		             bidimen = TRUE,
+		             suport = list(list(c(0, 1)), list(c(0, 1))))
+		> Cov(Z)
+		[1] -0.008503401
+		> Cor(Z)
+		[1] -0.1256281
+	\end{lstlisting}
+	
+\end{document}

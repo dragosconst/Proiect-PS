@@ -63,8 +63,8 @@
 \author{Placeholder}
 
 \begin{document}
-	%\section*{Cerința 7}
-	\textbf{Crearea unei funcții P care permite calculul diferitelor tipuri de probabilități asociate
+	\section{Cerința 7}
+	\textbf{7) Crearea unei funcții P care permite calculul diferitelor tipuri de probabilități asociate
 		unei variabile aleatoare continue(similar funcției P din pachetul discreteRV) }\vspace{5mm}
 	
 	Pentru a calcula probabilități pe variabile aleatoare continue, am definit funcția $P$ ca o metodă a clasei \textbf{contRV}, astfel:
@@ -200,7 +200,7 @@
 	\begin{itemize}
 		\item $X$ și $Y$ au aceeași densitate de probabilitate(apare de obicei în urma unor expresii de genul: $(X < a) \cap (X > b)$ ), caz în care formăm un obiect de tip \textbf{contRV} cu densitatea cunoscută și drept suport intersecția dintre suporturile lui $X$ și $Y$.
 		\item $X$ și $Y$ au o referință către aceeași v.a bidimensională, așa că formăm un nou obiect nou obiect \textbf{contRV} cu densitatea comună deja cunoscută și drept suport produsul cartezian intre suportul lui $X$ și cel al lui $Y$
-		\item $X$ și $Y$ au câte o referință către v.a bidimensionale diferite(sau nu au nicio referință), caz în care le considerăm independente și formăm un nou obiect \textbf{contRV} cu densitatea comună $f(x, y) = f_X(x) * f_Y(y)$ și drept suport produsul cartezian intre suportul lui $X$ și cel al lui $Y$		
+		\item $X$ și $Y$ au câte o referință către v.a bidimensionale diferite(sau nu au nicio referință), caz în care le considerăm independente și formăm un nou obiect \textbf{contRV} cu densitatea comună $f(x, y) = f_X(x) \cdot f_Y(y)$ și drept suport produsul cartezian intre suportul lui $X$ și cel al lui $Y$		
 	\end{itemize}
 
 	Funcția $op$ este definită astfel:
@@ -272,8 +272,8 @@
 	
 	pentru care se apelează funcția $cond$, care are la rândul ei un comportament diferit în funcție de relația dintre cele 2 obiecte $X$ și $Y$ de tipul \textbf{contRV}. Dacă:
 	\begin{itemize}
-		\item $X$ și $Y$ au densitățile marginale dintr-o v.a bidimensională $(X, Y)$, atunci calculează direct probabilitatea folosind formula: $P(X \in A \mid Y = y) = \int_{A} f_{X|Y}(x|y) \,dx$, unde densitatea condiționată o obținem din funcția \texttt{dens\_condit\_x\_de\_y}, descrisă în exercițiul 11.
-		\item Altfel, avem ori $X$ și $Y$ independente, ori au aceeași densitate. În ambele cazuri, putem folosi formula: $P(X \in A \mid Y \in B) = \frac{P(X \in A, Y \in B)}{P(Y \in B)}$. Chiar și pentru $X$, $Y$ independente, rezultatul ar fi cel așteptat, adică $P(X \in A)$.
+		\item $X$ și $Y$ au densitățile marginale dintr-o v.a bidimensională $(X, Y)$, atunci calculează direct probabilitatea folosind formula: $\displaystyle P(X \in A \mid Y = y) = \int_{A} f_{X|Y}(x|y) \,dx$, unde densitatea condiționată o obținem din funcția \texttt{dens\_condit\_x\_de\_y}, descrisă în exercițiul 11.
+		\item Altfel, avem ori $X$ și $Y$ independente, ori au aceeași densitate. În ambele cazuri, putem folosi formula: $\displaystyle P(X \in A \mid Y \in B) = \frac{P(X \in A, Y \in B)}{P(Y \in B)}$. Chiar și pentru $X$, $Y$ independente, rezultatul ar fi cel așteptat, adică $P(X \in A)$.
 	\end{itemize}\pagebreak
 
 	Funcția \texttt{cond} arată în felul următor:
@@ -323,7 +323,7 @@
 	\begin{center}
 		\begin{tabular}{|| c | c ||}
 			\hline
-			\textcolor{blue}{contRV} & Probabilități \\
+			\textcolor{blue}{contRV} & \textcolor{violet}{Notație matematică} \\
 			
 			\hline
 			\lstinline|P(X <= x)| & $P(X \leq x)$ \\

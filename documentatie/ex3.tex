@@ -63,8 +63,8 @@
 \author{Placeholder}
 
 \begin{document}
-	%\section*{Cerința 4}
-	\textbf{Crearea unui obiect de tip variabilă aleatoare continuă pornind de la o densitate de
+	\section{Cerința 3}
+	\textbf{3) Crearea unui obiect de tip variabilă aleatoare continuă pornind de la o densitate de
 		probabilitate introdusă de utilizator. Funcția trebuie să aibă opțiunea pentru variabile
 		aleatoare unidimensionale și respectiv bidimensionale.}\vspace{5mm}
 	
@@ -72,13 +72,13 @@
 	asociat:
 	\begin{itemize}
 		\item O densitate de probabilitate.
+		\item Repartiția variabilei aleatoare continue
 		\item Un Boolean ce indică dacă variabila aleatoare este bidimensională.
 		\item Suportul densității de probabilitate. În cazul variabilelor unidimensionale, acesta este reprezentat de o listă de intervale închise. Pentru o v.a bidimensională $(X, Y)$, suportul este reținut sub forma unei liste ce conține suporturile lui $X$ și $Y$.
-		\item Pentru o v.a unidimensională $X$, o referință către v.a bidimensională $(X, Y)$, în cazul in care $X$ s-a format în urma determinării densității marginale. Se folosește pentru a avea acces cu ușurință la densitatea comună în calculul unor probabilități ce implică pe $X$ și $Y$.
-		% AICI DE MENTIONAT SI SLOTUL "VAL" AL LUI DRAGOS!
+		\item Pentru o v.a unidimensională $X$, o referință către v.a bidimensională $(X, Y)$, în cazul in care $X$ s-a format în urma determinării densității marginale. Se folosește pentru a avea acces cu ușurință la densitatea comună în calculul unor probabilități ce implică pe $X$ și $Y$. 
 	\end{itemize}\vspace*{1\baselineskip} \par
-	Motivul pentru care este necesară specificarea suportului densității la crearea unui obiect de tip \textbf{contRV} este următorul: la calculul integralelor unde unul dintre capete nu este un număr finit, comportamentul funcției \lstinline|integrate()| poate produce rezultate neașteptate(de introdus exemple). Astfel, restricționând domeniul la punctele în care integrandul ia valori nenule, calculul integralei devine mult mai precis.
-	În stadiul actual însă, permitem ca suportul densitații să fie specificat doar ca o reuniune de intervale inchise în cazul v.a unidimensionale, sau dreptunghiuri în cazul celor bidimensionale.\vspace*{1\baselineskip}\par
+	Motivul pentru care este necesară specificarea suportului densității la crearea unui obiect de tip \textbf{contRV} este următorul: la calculul integralelor unde unul dintre capete nu este un număr finit, comportamentul funcției \lstinline|integrate()| poate produce rezultate neașteptate. Astfel, restricționând domeniul la punctele în care integrandul ia valori nenule, calculul integralei devine mult mai precis.
+	În stadiul actual însă, permitem ca suportul densitații să fie specificat doar ca o reuniune de intervale închise în cazul v.a unidimensionale, sau dreptunghiuri în cazul celor bidimensionale.\vspace*{1\baselineskip}\par
 	
 	Definiția clasei este următoarea:
 	\begin{lstlisting}
@@ -126,5 +126,5 @@
 	\end{lstlisting}\vspace*{1\baselineskip}
 	
 	
-	De asemenea, clasa \textbf{contRV} pune la dispoziție utilizatorilor pachetului o colecție de metode pentru a efectua operații pe variabile aleatoare continue, precum: calculul probabilităților(cu ajutorul metodei $P$, detalii în exercițiul 7), calculul mediilor și a dispersiilor(metodele $E$ și $Var$, detalii în exercițiile 5-6) și obținerea densitaților marginale(metodele $marginalaX$ și $marginalaY$).
+	De asemenea, clasa \textbf{contRV} pune la dispoziție utilizatorilor pachetului o colecție de metode pentru a efectua operații pe variabile aleatoare continue, precum: calculul probabilităților (cu ajutorul metodei $P$, detalii în exercițiul 7), calculul mediilor și a dispersiilor (metodele $E$ și $Var$, detalii în exercițiile 5-6) și obținerea densităților marginale (metodele $marginalaX$ și $marginalaY$).
 \end{document}

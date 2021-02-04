@@ -67,7 +67,7 @@
 
 \begin{document}
 \section{Cerința 11}
-\hfill \textbf{1)Pornind  de  la  densitatea  comună  a  două  variabile  aleatoare  continue,  construirea densităților marginale și a densităților condiționate.} \hfill \\
+\textbf{11) Pornind  de  la  densitatea  comună  a  două  variabile  aleatoare  continue,  construirea densităților marginale și a densităților condiționate.} \hfill \\
 \indent Implementarea densitățiilor marginale și condiționate se fac în funcție de funcția $integrala$. Astfel, avem densitățiile marginale:
 \begin{lstlisting}
 # construieste o v.a continua pornind de la densitatea marginala a lui X in v.a bidimen (X, Y)
@@ -82,7 +82,7 @@ marginalaY <- function(XY)
 	return (contRV(densitate = integrala(XY, 1), suport = XY@suport[[2]], bidimen = FALSE, ref_va_bidimen = XY))
 }
 \end{lstlisting} \hfill \\
-\indent Câmpul $ref\_va\_bidimen$ este folosit pentru a putea accesa cuplul $(X, Y)$ din $X$ sau $Y$ când vrem să calculăm vreo probabilitate care depinde de ambele. \\
+\indent Câmpul $ref\_va\_bidimen$ este folosit pentru a putea accesa cuplul $(X, Y)$ din $X$ sau $Y$ când vrem să calculăm vreo probabilitate care le include pe ambele. \\
 \indent Densitățiile condiționate au fost implementate în mod asemănător:
 \begin{lstlisting}
 dens_condit_x_de_y <- function(Z)

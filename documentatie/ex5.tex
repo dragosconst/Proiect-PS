@@ -80,7 +80,7 @@
 		\hline
 		\textcolor{blue}{X} & \textcolor{violet}{contRV} & Variabila aleatoare pe care vrem să calculăm o integrală\\
 		\hline
-		\textcolor{blue}{dt} & \textcolor{violet}{integer} & \makecell{Variabila după care vrem să integrăm, implicit e 0, \\ceea ce înseamnă că integrăm pe toate \\variabilele componente (dx pt unidimensionale si\\ dxdy pentru bidimensionale)} \\
+		\textcolor{blue}{dt} & \textcolor{violet}{integer} & \makecell{Variabila după care vrem să integrăm; \\este folosită explicit doar pentru determinarea densității\\ marginale, altfel implicit are valoarea 0 și se calculeaza\\ doar integrala densității variabilei aleatoare. Pentru dt = 1\\ se integrează doar după x, iar pentru dt = 2 doar după y.} \\
 		\hline
 	\end{tabular}
 \end{center}\hfill \\
@@ -167,13 +167,13 @@
 \begin{itemize}
 	\item $\displaystyle f_1(y) = \int_{a_1}^{b_1}f_{X,Y}(x,y)\mathrm{d}x$, unde $a_1$ și $b_1$ sunt capetele primului interval din suportul lui Y
 	\item $\displaystyle f_{i+1}(y) = \int_{a_{i+1}}^{b_{i+1}} f_{X,Y}(x,y)\mathrm{d}x + f_i(y)$, unde $a_{i+1}$ și $b_{i+1}$ sunt capetele primului celui de-al $i+1$-lea interval din suportul lui Y, iar $f_i(y)$ este functia rezultată din calcularea primelor $i$ integrale
-\end{itemize}\hfill \\
-\indent În final, în $f_n(y)$ o să avem densitatea marginală a lui Y, unde $n$ este numărul de intervale din suport.\\
+\end{itemize}\pagebreak \par 
+În final, în $f_n(y)$ o să avem densitatea marginală a lui Y, unde $n$ este numărul de intervale din suport.\\
 \indent Încă o dificultate întâlnită a fost la creearea funcțiilor propriu-zise în R. Dacă nu am fi folosit funcția $factory$ și am fi pus direct codul ei în $for$, am observat că R nu salva corect valoarea lui $pas$ sau intervalele din $i$, ci în schimb punea peste tot ultimul $pas$, respectiv ultimul interval. Din ce am înteles, problema apare din cauza felului în care R implementează scoping-ul variabilelor. În orice caz, soluția noastră este inspirată din urmatorul răspuns: \url{https://stackoverflow.com/questions/12481404/how-to-create-a-vector-of-functions}. \hfill \\
-\indent Sper că am clarificat destul de bine cum funcționează această funcție, de altfel fundamentală pentru implementarea clasei \textbf{contRV}, deoarece am încercat să folosim cât mai des funcția aceasta, în loc de integrate singură.\\
+\indent Sper că am clarificat destul de bine cum funcționează această funcție, de altfel fundamentală pentru implementarea clasei \textbf{contRV}, deoarece am încercat să folosim cât mai des funcția aceasta, în loc de $integrate$ singură.\\
 
 \subsection{Media} \hfill \\
-\indent Implementarea mediei se bazează pe formula ei obișnuită. Pentru aflarea mediei unei variabile continue $X$, recomandăm folosirea genericului $E(X)$, în loc de apelarea manuală a funcției $media(X)$.\\
+\indent Implementarea mediei se bazează pe formula ei obișnuită. Pentru aflarea mediei unei variabile continue $X$, recomandăm folosirea metodei $E(X)$, în loc de apelarea manuală a funcției $media(X)$.\\
 \indent Antetul funcției arată astfel:
 \begin{center}
 	\begin{tabular}{|| c | c | c ||}
@@ -203,13 +203,13 @@ media <- function(X)
 	)
 	return(retval)
 }
-\end{lstlisting} \hfill \\
-\indent Valoarea din $X@val$ este chiar repartiția lui X. Codul poate arăta ciudat la prima vedere, probabil din cauza variabilei $tmp$.\\
-\indent În primul rând, după cum se vede, am decis să folosim $...$ ca parametru pentru implementarea functiei „de sub integrală” a mediei, pentru a putea acoperi și cazul unidimensionalei, și bidimensionalei cu o singură funcție. Motivul pentru care am făcut funcția aceasta este și pentru că am considerat că avem un cod mai elegant dacă nu încărcăm câmpul „densitate” din constructorul lui $tmp$ cu o funcție definită pe loc.\\
+\end{lstlisting} \pagebreak \par
+Codul poate arăta ciudat la prima vedere, probabil din cauza variabilei $tmp$.\\
+\indent În primul rând, după cum se vede, am decis să folosim $\dots$ ca parametru pentru implementarea functiei „de sub integrală” a mediei, pentru a putea acoperi și cazul unidimensionalei, și bidimensionalei cu o singură funcție. Motivul pentru care am făcut funcția aceasta este și pentru că am considerat că avem un cod mai elegant dacă nu încărcăm câmpul „densitate” din constructorul lui $tmp$ cu o funcție definită pe loc.\\
 \indent În al doilea rând, deoarece deja avem funcția $integrala$ care știe să calculeze o integrală pe un anumit suport, ar fi bine să o apelăm cumva, decât să rescriem aceiași secvență de cod de mai multe ori. Desigur, dacă am apela $integrala(X)$, nu am obține rezultatul corect, pentru că vrem să integrăm funcția $subIntegrala$, nu densitatea lui $X$. Atunci, am găsit soluția să folosim un fel de pseudo-variabilă, căreia îi dăm ca densitate funcția pe care vrem să o integrăm pentru a putea apela $integrala$ pe această pseudo-variabilă. Acest artificiu este folosit de mai multe ori în proiect, deoarece am întâmpinat mai multe situații asemănătoare, în care am fi putut folosi o funcție destinată doar variabilelor continue, pentru a calcula diverse valori.\\
 
 \subsection{Dispersia} \hfill \\
-\indent Dispersia seamănă ca implementare foarte mult cu media, doar că desigur diferă calculele făcute. De asemenea, există un generic definit pentru dispersie, anume $Var(X)$. Antetul funcției arată astfel:
+\indent Dispersia seamănă ca implementare foarte mult cu media, doar că desigur diferă calculele făcute. De asemenea, există o metodă definită pentru dispersie, anume $Var(X)$. Antetul funcției arată astfel:
 \begin{center}
 	\begin{tabular}{|| c | c | c ||}
 		\hline
@@ -305,7 +305,7 @@ powF <- function(f, y)
 		\hline
 	\end{tabular}
 \end{center}\hfill \\
-\indent Implementarea este aproape identică cu dispersia, doar că acum ridicăm xCoef la $r$, în loc de $2$. O modificare pe care am făcut-o a fost că, dacă $r < 3$, putem calcula momentul centrat în funcție de funcțiile deja scris în pachet în modul următor:
+\indent Implementarea este aproape identică cu dispersia, doar că acum ridicăm $xCoef$ la $r$, în loc de $2$. O modificare pe care am făcut-o a fost că, dacă $r < 3$, putem calcula momentul centrat în funcție de funcțiile deja scris în pachet în modul următor:
 \begin{lstlisting}
 moment_centrat <- function(X, ordin)
 {

@@ -62,12 +62,12 @@
 \title{Placeholder}
 \author{Placeholder}
 \begin{document}
-	
-\textbf{1) Fiind dată o funcție f , introdusă de utilizator, determinarea unei constante de
+\section{Cerința 1}	\hfill \\
+\indent \textbf{1) Fiind dată o funcție f , introdusă de utilizator, determinarea unei constante de
 	normalizare k. În cazul în care o asemenea constantă nu există, afișarea unui mesaj
 	corespunzător către utilizator}\vspace{5mm}
 
-\indent Scurtă descriere a funcției: \\
+\indent Scurtă descriere a antetului funcției: \\
 \begin{center}
 	\begin{tabular}{|| c | c | c ||}
 		\hline
@@ -115,6 +115,6 @@ Nor_constant <- function(Func, sup) {
 }
 \end{lstlisting}
 
-\hfill Va fi parcurs suportul funcției dată ca parametru, și vom calcula suma pe fiecare interval din suport. În același timp, verificăm o daca funcția e pozitivă pe fiecare interval din suport, folosind $any(sapply(seq(i[1], i[2], length.out = 1000), Func) < 0)$, pentru a alege 1000 de valori echidistante.\hfill \\
-\indent La final, dacă integrala este 0 înseamnă că nu există constantă de normalizare și afișează un mesaj corespunzător. În caz contrar, calculeză constanta.\hfill \\
+\indent Va fi parcurs suportul funcției dată ca parametru, și vom calcula suma pe fiecare interval din suport. În același timp, verificăm dacă funcția e pozitivă pe fiecare interval din suport, folosind $any(sapply(seq(i[1], i[2], length.out = 1000), Func) < 0)$, pentru a alege 1000 de valori echidistante.\hfill \\
+\indent La final, dacă integrala este 0 înseamnă că nu există constantă de normalizare și afișează un mesaj corespunzător. În caz contrar, calculează constanta și o returnează.\hfill \\
 \end{document}

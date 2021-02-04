@@ -63,8 +63,8 @@
 \author{Placeholder}
 
 \begin{document}
-	%\section*{Cerința 2}
-	\textbf{Verificarea dacă o funcție introdusă de utilizator este densitate de probabilitate.}\vspace{5mm}
+	\section{Cerința 2}
+	\textbf{2) Verificarea dacă o funcție introdusă de utilizator este densitate de probabilitate.}\vspace{5mm}
 	
 	Dificultate întâmpinată: funcția \lstinline|integrate| returnează valori eronate pentru integranzi cu valoarea $0$ într-o mare parte a domeniului. Ca remediu, am ales să transmitem printr-un parametru suportul funcției de integrat (detalii în comentariul din cod).\par
 	De asemenea, în cazul funcțiilor pe ramuri, \lstinline|Vectorize()| devine o necesitate: evaluarea condițiilor din if-uri (de exemplu, $x > 0$) ia în considerare doar primul element al vectorului Boolean $x > 0$. Apare astfel conflict cu modul de lucru al procedurii \lstinline|integrate|, care evaluează funcția-argument pe un vector de mostre, nu punct-cu-punct.\par

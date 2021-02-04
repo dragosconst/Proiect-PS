@@ -204,14 +204,14 @@ moment_centrat <- function(X, ordin)
   else if(ordin == 1)
     tryCatch({ # trebuie totusi verificat daca E(X) exista, ca altfel nu va da nici macar 0
       media(X)
-      retval <- 0
+      return(0)
     }, error= function(err)
     {
       stop(paste("Calcularea momentului centrat de ordin ", ordin, " a esuat, nu exista media."))
     })
   else if(ordin == 2)
     tryCatch({  # X dispersia nu exista, vrem un mesaj specific pt momente
-      dispersia(X)
+      return(dispersia(X))
     }, error= function(err)
     {
       stop(paste("Calcularea momentului centrat de ordin ", ordin, " a esuat, nu exista dispersie."))
@@ -253,7 +253,7 @@ moment_initial <- function(X, ordin)
     return(1)
   else if(ordin == 1)
     tryCatch({ # trebuie totusi verificat daca E(X) exista, ca altfel nu va da nici macar 0
-      media(X)
+      return(media(X))
     }, error= function(err)
     {
       stop(paste("Calcularea momentului initial de ordin ", ordin, " a esuat."))

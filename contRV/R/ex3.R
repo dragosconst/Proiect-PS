@@ -116,7 +116,7 @@ compunere <- function(f, g)
 
 setMethod("aplica", "contRV",
           function(object, f){
-              retval <- contRV(object@densitate, Vectorize(compunere(f, object@val)), object@bidimen, object@suport[[1]],
+              retval <- contRV(object@densitate, Vectorize(compunere(f, object@val)), object@bidimen, object@suport,
                                ref_va_bidimen = object@ref_va_bidimen)
           })
 

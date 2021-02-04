@@ -209,7 +209,7 @@ media <- function(X)
 \indent În al doilea rând, deoarece deja avem funcția $integrala$ care știe să calculeze o integrală pe un anumit suport, ar fi bine să o apelăm cumva, decât să rescriem aceiași secvență de cod de mai multe ori. Desigur, dacă am apela $integrala(X)$, nu am obține rezultatul corect, pentru că vrem să integrăm funcția $subIntegrala$, nu densitatea lui $X$. Atunci, am găsit soluția să folosim un fel de pseudo-variabilă, căreia îi dăm ca densitate funcția pe care vrem să o integrăm pentru a putea apela $integrala$ pe această pseudo-variabilă. Acest artificiu este folosit de mai multe ori în proiect, deoarece am întâmpinat mai multe situații asemănătoare, în care am fi putut folosi o funcție destinată doar variabilelor continue, pentru a calcula diverse valori.\\
 
 \subsection{Dispersia} \hfill \\
-\indent Dispersia seamănă ca implementare foarte mult cu media, doar că desigur diferă calculele făcute. Antetul funcției arată astfel:
+\indent Dispersia seamănă ca implementare foarte mult cu media, doar că desigur diferă calculele făcute. De asemenea, există un generic definit pentru dispersie, anume $Var(X)$. Antetul funcției arată astfel:
 \begin{center}
 	\begin{tabular}{|| c | c | c ||}
 		\hline

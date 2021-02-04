@@ -114,19 +114,6 @@ interval_intersect <- function (A, B)
 }
 
 
-# by Florin
-func <- function(x)
-{
-  if (x < -1)
-    0
-  else if (x < 0)
-    1 + x
-  else if (x < 1)
-    1 - x
-  else
-    0
-}
-
 # Reuniune si intersectie de variabile aleatoare
 op <- function(X, Y, o)
 {
@@ -221,25 +208,34 @@ cond <- function (X, Y)
   }
   else
   {
-    # P(X | Y) = P(X), X si Y independente
-    # Daca X si Y sunt independente, atunci calculul de mai jos este egal cu P(X)
     return (integrala(X %AND% Y) / integrala(Y)) # P(X ∩ Y) / P(Y)
   }
 }
 
-# Teste
-# Y nu este o v.a, se foloseste pt a testa operatiile de tip intersectie si reuniune de intervale
-# Y <- contRV(densitate = function(x) x, bidimen = FALSE, suport = list(c(0, 2), c(4, 7), c(9, 11)))
-# Y > 5  -- suportul va fi [5, 7] U [9, 11]
-# ((Y <= 1) %OR% (Y >= 5)) -- suportul va fi [0, 1] U [5, 7] U [9, 11]
-# ((Y <= 5) %AND% (Y >= 1.5)) -- suportul va fi [1.5, 2] U [4, 5]
 
+
+# Teste
+
+# func <- function(x)
+# {
+#   if (x < -1)
+#     0
+#   else if (x < 0)
+#     1 + x
+#   else if (x < 1)
+#     1 - x
+#   else
+#     0
+# }
 
 # Z <- contRV(densitate = Vectorize(func), bidimen = FALSE, suport = list(c(-1, 1)))
 # P(Z <= 0) == 0.5
 # P((Z <= 0.5) %AND% (Z >= -0.7)) == 0.83
 # P(((Z <= 0.5) %AND% (Z >= -0.7)) %OR% (Z <= 1)) == 1
 # P(Z >= 0.1 | Z <= 0.8) == 0.3928572
+
+
+
 
 # XY <- contRV(densitate = function (x, y) (6/7) * (x+y)^2,
 #             bidimen = TRUE,
@@ -249,8 +245,6 @@ cond <- function (X, Y)
 # Y <- marginalaY(XY)
 
 # P((X <= 0.5) %AND% (X >= 0.2) | Y == 0.2) == 0.1622093
-#
-
 # P((X <= 0.7) %AND% (Y >= 0.5))
 #
 # func2 <- function(x)

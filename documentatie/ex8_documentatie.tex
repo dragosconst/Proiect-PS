@@ -1,28 +1,82 @@
-\documentclass[12pt, twoside]{article}
+\documentclass[12pt]{article}
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{enumitem}
+\usepackage[Export]{adjustbox}
+\usepackage{cancel}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\usepackage{graphicx}
+\usepackage[margin = 1in]{geometry}
+\usepackage{blindtext}
+\usepackage[section]{placeins}
+\usepackage{xcolor,listings}
+\usepackage{textcomp}
 \usepackage[utf8]{inputenc}
-\usepackage{listings}
+\lstset{upquote=true}
 \lstdefinestyle{myCustomRStyle}{
 	language=R,
+	backgroundcolor = \color{lightgray!10!white},
 	numbers=left,
 	stepnumber=1,
 	numbersep=10pt,
 	tabsize=2,
 	showspaces=false,
-	showstringspaces=false
+	breaklines=true
+	showstringspaces=false,
+	basicstyle=\footnotesize\ttfamily,
+	keywordstyle=\bfseries\color{blue!50!black},
+	commentstyle=\itshape\color{orange!60!black},
+	identifierstyle=\color{black},
+	stringstyle=\color{green!50!black},
+	xleftmargin=\parindent,
+	frame=L
 }
+\lstset{literate=%
+	*{0}{{{\color{blue}0}}}1
+	{1}{{{\color{blue}1}}}1
+	{2}{{{\color{blue}2}}}1
+	{3}{{{\color{blue}3}}}1
+	{4}{{{\color{blue}4}}}1
+	{5}{{{\color{blue}5}}}1
+	{6}{{{\color{blue}6}}}1
+	{7}{{{\color{blue}7}}}1
+	{8}{{{\color{blue}8}}}1
+	{9}{{{\color{blue}9}}}1
+}
+
 \lstset{basicstyle=\small,style=myCustomRStyle}
 \usepackage{amsfonts}
+\graphicspath{ {./images/} }
 
-\title{ex 8}
-\author{Ristea Mihai Cristian}
-\date{February 2021}
+\pagestyle{fancy}
+\fancyhead{}
+\fancyfoot{}
+\usepackage[T1]{fontenc}
+\fancyhead[L]{Placeholder}
+\fancyhead[R]{Placeholder}
+\setlength{\headheight}{25pt}
+\fancyfoot[C]{\thepage}
+\title{Placeholder}
+\author{Placeholder}
 
 \begin{document}
 	
-	\textbf{8) Afișarea unei “fișe de sinteză” care să conțină informații de bază despre respectiva
+	\textbf{8.) Afișarea unei “fișe de sinteză” care să conțină informații de bază despre respectiva
 		repartiție(cu precizarea sursei informației!). Relevant aici ar fi să precizați pentru ce e
-		folosită in mod uzual acea repartiție, semnificația parametrilor, media, dispersia etc.}\vspace{5mm}
-	
+		folosită in mod uzual acea repartiție, semnificația parametrilor, media, dispersia etc.}\vspace{5mm}\\
+\indent Scurtă descriere a funcției: \\
+\begin{center}
+	\begin{tabular}{|| c | c | c ||}
+		\hline
+		Parametrul & Tipul & Descriere \\
+		\hline
+		\textbf{\textcolor{blue}{Rep}} & \textcolor{violet}{Unul din vectorii definiți in pachet} & Repartitia data ca parametru \\
+		\hline
+	\end{tabular}
+\end{center}	
 	\begin{lstlisting}
 		#Functia afiseaza informatiile despre o repartitie mai compact
 		#compact = fara spatii goale
@@ -36,14 +90,6 @@
 		}
 	\end{lstlisting}
 	
-	\begin{center}
-		\begin{tabular}{ c c }
-			Fisa\underline{\hspace{.08in}}sinteza & Denumirea functiei \\
-			Rep & Repartitia data ca parametru \\
-			for (i in rep) & Parcurgerea informatiilor din repartitie 
-		\end{tabular}
-	\end{center}
-	\vspace{30mm}
 	
 	Functia Fisa\underline{\hspace{.08in}}sinteza afiseaza informatiile salvate despre repartitia data ca parametru sub forma unei fise de sinteza.\hfill \break
 	\indent Informmatiile sunt salvate intr-o lista de elemente de tip String. Parcurgand lista afisam elementele acesteia pe rand. Aceasta abordare permite afisarea informatiilor compact, apelarea listei in consola afiseaza unele randuri goale in anumite cazuri.

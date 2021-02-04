@@ -1,67 +1,120 @@
-\documentclass[12pt, twoside]{article}
+\documentclass[12pt]{article}
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{enumitem}
+\usepackage[Export]{adjustbox}
+\usepackage{cancel}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\usepackage{graphicx}
+\usepackage[margin = 1in]{geometry}
+\usepackage{blindtext}
+\usepackage[section]{placeins}
+\usepackage{xcolor,listings}
+\usepackage{textcomp}
 \usepackage[utf8]{inputenc}
-\usepackage{listings}
+\lstset{upquote=true}
 \lstdefinestyle{myCustomRStyle}{
 	language=R,
+	backgroundcolor = \color{lightgray!10!white},
 	numbers=left,
 	stepnumber=1,
 	numbersep=10pt,
 	tabsize=2,
 	showspaces=false,
-	showstringspaces=false
+	breaklines=true
+	showstringspaces=false,
+	basicstyle=\footnotesize\ttfamily,
+	keywordstyle=\bfseries\color{blue!50!black},
+	commentstyle=\itshape\color{orange!60!black},
+	identifierstyle=\color{black},
+	stringstyle=\color{green!50!black},
+	xleftmargin=\parindent,
+	frame=L
 }
+\lstset{literate=%
+	*{0}{{{\color{blue}0}}}1
+	{1}{{{\color{blue}1}}}1
+	{2}{{{\color{blue}2}}}1
+	{3}{{{\color{blue}3}}}1
+	{4}{{{\color{blue}4}}}1
+	{5}{{{\color{blue}5}}}1
+	{6}{{{\color{blue}6}}}1
+	{7}{{{\color{blue}7}}}1
+	{8}{{{\color{blue}8}}}1
+	{9}{{{\color{blue}9}}}1
+}
+
 \lstset{basicstyle=\small,style=myCustomRStyle}
 \usepackage{amsfonts}
+\graphicspath{ {./images/} }
 
-\title{ex1 & ex 8}
-\author{Ristea Mihai}
-\date{February 2021}
-
+\pagestyle{fancy}
+\fancyhead{}
+\fancyfoot{}
+\usepackage[T1]{fontenc}
+\fancyhead[L]{Placeholder}
+\fancyhead[R]{Placeholder}
+\setlength{\headheight}{25pt}
+\fancyfoot[C]{\thepage}
+\title{Placeholder}
+\author{Placeholder}
 \begin{document}
 	
 \textbf{1) Fiind dată o funcție f , introdusă de utilizator, determinarea unei constante de
-	normalizare k. In cazul in care o asemenea constantă nu există, afișarea unui mesaj
+	normalizare k. În cazul în care o asemenea constantă nu există, afișarea unui mesaj
 	corespunzător către utilizator}\vspace{5mm}
 
+\indent Scurtă descriere a funcției: \\
+\begin{center}
+	\begin{tabular}{|| c | c | c ||}
+		\hline
+		Parametrul & Tipul & Descriere \\
+		\hline
+		\textbf{\textcolor{blue}{Func}} & \textcolor{violet}{function} & Funcția data ca parametru \\
+		\hline
+		\textbf{\textcolor{blue}{sup}} & \textcolor{violet}{listă de liste} & Suportul funcției \\
+		\hline
+	\end{tabular}
+\end{center}
 \begin{lstlisting}
-Nor_constant <- function(Func) {
-if(any(sapply(seq(-100, 100, length.out = 1000), Func) < 0)){
-  stop("Functie negativa")
-  #daca functia are valori negative nu pot calcula constanta
-  #de normalizare
-}
-else {
-  tryCatch(integ <- integrate(Vectorize(Func), lower = -Inf,
-   upper = Inf)$value,
-  error= function(err)
-  {
-    stop("Integrala e divergenta")
-    #daca integrala nu poate fi calculata returnez
-    #un mesaj de eroare
-  })
-  if(integ == 0)
-  stop("Nu exista constanta de normalizare pentru functia data")
-  #daca integrala = 0 inseamna ca nu exista constanta de normalizare
-  const <- 1/integ
-  return(const)
-}
+Nor_constant <- function(Func, sup) {
+	
+	sum <- 0
+	
+	for (i in sup) {
+		tryCatch(
+		sum <- sum + integrate(Vectorize(Func), i[1], i[2], abs.tol = 0)$value,
+		error= function(err) {
+			stop("Integrala e divergenta sau functia nu e integrabila") # daca integrala nu poate fi calculata returnez un mesaj de eroare
+		}
+		)
+		
+		if (i[1] == -Inf && i[2] == Inf) {
+			i[1] <- -1000
+			i[2] <-  1000
+		}
+		else if (i[1] == -Inf)
+		i[1] <- i[2] - 1000
+		else if (i[2] ==  Inf)
+		i[2] <- i[1] + 1000
+		
+		if(any(sapply(seq(i[1], i[2], length.out = 1000), Func) < 0))
+		stop("Functie negativa") # daca functia are valori negative nu pot calcula constanta de normalizare
+		
+	}
+	
+	if(sum == 0)
+	stop("Nu exista constanta de normalizare pentru functia data") # daca integrala = 0 inseamna ca nu exista constanta de normalizare
+	
+	const <- 1 / sum
+	return (const)
 	
 }
 \end{lstlisting}
 
-\begin{center}
-	\begin{tabular}{ c c }
-		Nor\underline{\hspace{.08in}}const & Denumirea functiei \\
-		Func & Functia data ca parametru \\
-		integ & Variabila in care se salveaza valoarea integralei \\
-		const & Variabila in care se salveaza constanta de normalizare pentru return
-	\end{tabular}
-\end{center}
-\vspace{30mm}
-
-	Functia Nor\underline{\hspace{.08in}}constant returneaza constanta de normalizare a functiei data ca parametru.\hfill \break
-	\indent Incepe prin a verifica pe mai multe valori pozitivitatea functiei primita ca parametru. Daca aceasta functie intoarce valori negative afiseaza un mesaj corespunzator, constanta de normalizare se poate calcula doar pe functii strict pozitive.\hfill \break
-	\indent Daca aceasta conditie este indeplinita continua la calcularea integralei pe (-$\infty, \infty$$ )$. Daca integrala este 0 inseamna ca nu exista constanta de normalizare si afiseaza un mesaj. \hfill \break
-	\indent In final, ridica rezultatul integralei la puterea -1 pentru a obtine constanta de normalizare si o returneaza.
-
+\hfill Va fi parcurs suportul funcției dată ca parametru, și vom calcula suma pe fiecare interval din suport. În același timp, verificăm o daca funcția e pozitivă pe fiecare interval din suport, folosind $any(sapply(seq(i[1], i[2], length.out = 1000), Func) < 0)$, pentru a alege 1000 de valori echidistante.\hfill \\
+\indent La final, dacă integrala este 0 înseamnă că nu există constantă de normalizare și afișează un mesaj corespunzător. În caz contrar, calculeză constanta.\hfill \\
 \end{document}

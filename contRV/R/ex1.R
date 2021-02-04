@@ -6,7 +6,7 @@ Nor_constant <- function(Func, sup) {
       tryCatch(
         sum <- sum + integrate(Vectorize(Func), i[1], i[2], abs.tol = 0)$value,
         error= function(err) {
-          stop("Integrala e divergenta") # daca integrala nu poate fi calculata returnez un mesaj de eroare
+          stop("Integrala e divergenta sau functia nu e integrabila") # daca integrala nu poate fi calculata returnez un mesaj de eroare
         }
       )
 

@@ -1,0 +1,265 @@
+\documentclass[12pt]{article}
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{enumitem}
+\usepackage[Export]{adjustbox}
+\usepackage{cancel}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\usepackage{graphicx}
+\usepackage[margin = 1in]{geometry}
+\usepackage{blindtext}
+\usepackage[section]{placeins}
+\usepackage{xcolor,listings}
+\usepackage{textcomp}
+\usepackage[utf8]{inputenc}
+\lstset{upquote=true}
+\lstdefinestyle{myCustomRStyle}{
+	language=R,
+	backgroundcolor = \color{lightgray!10!white},
+	numbers=left,
+	stepnumber=1,
+	numbersep=10pt,
+	tabsize=2,
+	showspaces=false,
+	breaklines=true
+	showstringspaces=false,
+	basicstyle=\footnotesize\ttfamily,
+	keywordstyle=\bfseries\color{blue!50!black},
+	commentstyle=\itshape\color{orange!60!black},
+	identifierstyle=\color{black},
+	stringstyle=\color{green!50!black},
+	xleftmargin=\parindent,
+	frame=L
+}
+\lstset{literate=%
+	*{0}{{{\color{blue}0}}}1
+	{1}{{{\color{blue}1}}}1
+	{2}{{{\color{blue}2}}}1
+	{3}{{{\color{blue}3}}}1
+	{4}{{{\color{blue}4}}}1
+	{5}{{{\color{blue}5}}}1
+	{6}{{{\color{blue}6}}}1
+	{7}{{{\color{blue}7}}}1
+	{8}{{{\color{blue}8}}}1
+	{9}{{{\color{blue}9}}}1
+}
+
+\lstset{basicstyle=\small,style=myCustomRStyle}
+\usepackage{amsfonts}
+\graphicspath{ {./images/} }
+
+\pagestyle{fancy}
+\fancyhead{}
+\fancyfoot{}
+\usepackage[T1]{fontenc}
+\fancyhead[L]{Placeholder}
+\fancyhead[R]{Placeholder}
+\setlength{\headheight}{25pt}
+\fancyfoot[C]{\thepage}
+\title{Placeholder}
+\author{Placeholder}
+
+\begin{document}
+	%\section*{Cerința 7}
+	\textbf{Crearea unei funcții P care permite calculul diferitelor tipuri de probabilități asociate
+		unei variabile aleatoare continue(similar funcției P din pachetul discreteRV) }\vspace{5mm}
+	
+	Pentru a calcula probabilități pe variabile aleatoare continue, am definit funcția $P$ ca o metodă a clasei \textbf{contRV}, astfel:
+	\begin{lstlisting}[numbers=none]
+		setMethod("P", "contRV",
+		function (object) {
+			return (integrala(object)) # integreaza pe suport
+		})
+	\end{lstlisting}
+
+	După cum se poate observa, parametrul funcției este un obiect de tip \textbf{contRV}. Acest lucru poate părea ciudat, întrucât ar fi inutil să putem calcula doar probabilități de tipul $P(X)$, intrucât rezultatul ar fi întodeauna egal cu 1. În contextul pachetului, însă, un obiect de tip \textbf{contRV} nu reprezintă întotdeauna o variabilă aleatoare propriu-zisă. Mai precis, orice obiect poate fi rezultatul unei expresii de tipul: $X \leq x$, $(X \leq x) \cap  (Y \geq y)$, $(X < a) \cup (X > b)$ etc. Astfel, prin evaluarea expresiilor, restrângem domeniul pe care integrăm densitățile în calculul probabilităților și să păstrăm notații cât mai apropiate de cele matematice(detalii în exemplele de la sfârșit).\par
+	
+	Pentru a evalua expresiile, am supraîncărcat următorii operatori:
+	\begin{lstlisting}
+		setMethod("<", c("contRV", "numeric"), function (e1, e2) {
+			comp(e1, e2, "<=") # P(X < x) = P(X <= x)
+		})
+		setMethod("<=", c("contRV", "numeric"), function (e1, e2) {
+			comp(e1, e2, "<=")
+		})
+		setMethod(">", c("contRV", "numeric"), function (e1, e2) {
+			comp(e1, e2, ">=") # P(X > x) = P(X >= x)
+		})
+		setMethod(">=", c("contRV", "numeric"), function (e1, e2) {
+			comp(e1, e2, ">=")
+		})
+		setMethod("==", c("contRV", "numeric"), function (e1, e2) {
+			comp(e1, e2, "==")
+		})
+		setMethod("%AND%", c("contRV", "contRV"), function (e1, e2) {
+		op(e1, e2, "&") # intersectie
+		})
+		setMethod("%OR%", c("contRV", "contRV"), function (e1, e2) {
+		op(e1, e2, "|") # reuniune
+		})
+		setMethod("|", c("contRV", "contRV"), function (e1, e2) {
+		cond(e1, e2) # conditionare
+		})
+	\end{lstlisting}\pagebreak
+
+	Pentru operatorii de inegalitate și egalitate, se observă ca aceștia au drept parametri un obiect \textbf{contRV} și un număr real. Se apelează funcția $comp$, ce va efectua restrângerea efectivă a suportului variabilei aleatoare pentru calculul probabilităților.
+	
+	\begin{lstlisting}
+		# Determina suportul pentru expresii de tipul X <= x, X >= x
+		comp <- function(X, x, c)
+		{
+			
+			if (X@bidimen)
+				stop("Nu se poate compara o v.a bidimensionala cu un numar real!")
+			
+			suportNou <- list()
+			nr <- 1
+			
+			# Presupunem ca intervalele sunt in ordine crescatoare dupa capatul inferior
+			# si nu se intersecteaza!	
+			if (c == "==")
+			{
+				for (i in X@suport[[1]])
+				{
+					a <- i[1]
+					b <- i[2]
+					
+					if (x < a)
+					break # nu mai are rost sa cautam
+					
+					if (a <= x & b >= x) # daca x se afla in intervalul [a, b]
+					{
+						suportNou[[nr]] <- c(x, x) # suportul va fi intervalul [x, x]
+						break
+					}
+				}
+			}
+			else if (c == "<=")
+			{
+				# Exemplu: Daca suportul densitatii este format din [0, 2] U [4, 7] U [9, 11]
+				# Noul suport pentru X <= 5 va fi [0, 2] U [4, 5]
+				
+				for (i in X@suport[[1]])
+				{
+					a <- i[1]
+					b <- i[2]
+					
+					if (x < a)  # daca x este mai mic decat capatul inferior al intervalului
+					break # am terminat de construit suportul
+					
+					if (a <= x & b >= x) # daca x se afla in intervalul [a, b]
+					{
+						suportNou[[nr]] <- c(a, x) # adaugam ultimul interval din noul suport, adica [a, x]
+						break
+					}
+					
+					# altfel, n-am ajuns la un interval care sa-l contina pe x, deci il adaugam in suportul nou
+					suportNou[[nr]] <- c(a, b)
+					nr <- nr + 1
+				}
+			}
+			else # ">="
+			{
+				# Exemplu: Daca suportul densitatii este format din [0, 2] U [4, 7] U [9, 11]
+				# Noul suport pentru X >= 5 va fi [5, 7] U [9, 11]
+				
+				# parcurgem intervalele in ordine descrescatoare dupa capatul inferior
+				for (i in rev(X@suport[[1]]))
+				{
+					a <- i[1]
+					b <- i[2]
+					
+					if (x > b)
+					break
+					
+					if (a <= x & b >= x) # daca x se afla in intervalul [a, b]
+					{
+						suportNou[[nr]] <- c(x, b) # adaugam ultimul interval din noul suport, adica [x, b]
+						break
+					}
+					
+					# altfel, inca n-am ajuns la un interval care sa-l contina pe x, deci il adaugam in suportul nou
+					suportNou[[nr]] <- c(a, b)
+					nr <- nr + 1
+				}
+				
+				# inversam ordinea din noul suport, intrucat am parcurs intervalele din suport in ordine inversa
+				suportNou <- rev(suportNou)
+			}
+			
+			# atentie! rezultatul obtinut nu mai este o v.a! se foloseste doar pt a calcula probabilitati!
+			return (contRV(densitate = X@densitate, val = X@val, bidimen = X@bidimen, suport = suportNou,
+			ref_va_bidimen = X@ref_va_bidimen))
+		}
+	\end{lstlisting}\vspace*{2\baselineskip}\\
+	
+	Pentru operatorii \%AND\% și \%OR\% ce implementează intersecția, respectiv reuniunea de variabile aleatoare continue, se apelează funcția $op$, care va avea un comportament diferit în funcție de relația dintre cei doi parametri $X$ și $Y$ de tip \textbf{contRV}. Mai exact, distingem următoarele cazuri:
+	\begin{itemize}
+		\item $X$ și $Y$ au aceeași densitate de probabilitate(apare de obicei în urma unor expresii de genul: $(X < a) \cap (X > b)$ ), caz în care formăm un obiect de tip \textbf{contRV} cu densitatea cunoscută și drept suport intersecția dintre suporturile lui $X$ și $Y$.
+		\item $X$ și $Y$ au o referință către aceeași v.a bidimensională, așa că formăm un nou obiect nou obiect \textbf{contRV} cu densitatea comună deja cunoscută și drept suport produsul cartezian intre suportul lui $X$ și cel al lui $Y$
+		\item $X$ și $Y$ au câte o referință către v.a bidimensionale diferite(sau nu au nicio referință), caz în care le considerăm independente și formăm un nou obiect \textbf{contRV} cu densitatea comună $f(x, y) = f_X(x) * f_Y(y)$ și drept suport produsul cartezian intre suportul lui $X$ și cel al lui $Y$		
+	\end{itemize}
+
+	Funcția $op$ este definită astfel:
+	\begin{lstlisting}
+		# Reuniune si intersectie de variabile aleatoare
+		op <- function(X, Y, o)
+		{
+			
+			suportNou <- list()
+			nr <- 1
+			
+			if (o == "&") # intersectie
+			{
+				
+				if (!identical(X@densitate, Y@densitate))
+				{
+					
+					XY <- NULL
+					
+					if (!is.null(X@ref_va_bidimen) & identical(X@ref_va_bidimen, Y@ref_va_bidimen))
+					{
+						# aici se face o copie
+						XY <- X@ref_va_bidimen
+					}
+					else
+					{
+						# consideram ca sunt independente
+						XY <- contRV(densitate = function(x, y) {X@densitate(x) * Y@densitate(y)}, bidimen = TRUE)
+					}
+					
+					XY@suport[[1]] <- X@suport[[1]]
+					XY@suport[[2]] <- Y@suport[[1]]
+					
+					return (XY)
+				}
+				
+				for (i in X@suport[[1]])
+				{
+					for (j in Y@suport[[1]])
+					{
+						# reuniuni de intersectii ale intervalelor din suport
+						
+						A <- interval_intersect(i, j)
+						if (!is.null(A))
+						{
+							suportNou[[nr]] <- A
+							nr <- nr + 1
+						}
+					}
+				}
+				
+				return (contRV(densitate = X@densitate, val = X@val, bidimen = X@bidimen, suport = suportNou,
+				ref_va_bidimen = X@ref_va_bidimen)) # intoarce contRV pt a integra suportul ramas
+			}
+			else # reuniune
+			{
+				return (P(X) + P(Y) - P(X %AND% Y)) # aici intoarce deja probabilitatea calculata
+				# problema este ca nu se mai pot aplica alte operatii pe v.a
+			}
+		}
+	\end{lstlisting}
+\end{document}

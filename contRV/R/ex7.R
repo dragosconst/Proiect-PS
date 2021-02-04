@@ -128,7 +128,6 @@ func <- function(x)
 }
 
 # Reuniune si intersectie de variabile aleatoare
-# Functioneaza doar daca X si Y au aceeasi densitate
 op <- function(X, Y, o)
 {
 
